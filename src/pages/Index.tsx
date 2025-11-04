@@ -2,7 +2,6 @@ import { useState } from "react";
 import { CheckCircle, Brain, Zap, Target } from "lucide-react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
-import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
@@ -17,7 +16,6 @@ const Index = () => {
   const { toast } = useToast();
 
   const navigate = useNavigate();
-
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleFileUpload = async (files: File[]) => {
@@ -46,7 +44,7 @@ const Index = () => {
       const data = await response.json();
 
       navigate("/analysis", {
-        state: { ananlysisAPIData: data.convertedCode },
+        state: { ananlysisAPIData: data.report },
       });
 
       setIsReportData(() => true);
