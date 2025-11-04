@@ -40,22 +40,23 @@ import {
   Activity,
   Search,
   Network,
+  ArrowRight,
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 export interface AnalysisPageProps {
   ananlysisAPIData: string | AnalysisData;
 }
 
 const AnalysisPage = () => {
   const [data, setData] = useState<AnalysisData | null>(null);
-  console.log("data: ", data);
+  // console.log("data: ", data);
   const location = useLocation();
   const { ananlysisAPIData } = location.state || {};
-  console.log(ananlysisAPIData, "ananlysisAPIData");
+  // console.log(ananlysisAPIData, "ananlysisAPIData");
 
   useEffect(() => {
     if (ananlysisAPIData) {
-      console.log("Received analysis API data:", ananlysisAPIData);
+      // console.log("Received analysis API data:", ananlysisAPIData);
       try {
         if (typeof ananlysisAPIData === "string") {
           const parsed = JSON.parse(ananlysisAPIData);
@@ -1313,6 +1314,21 @@ const AnalysisPage = () => {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
+
+        {/* Migration Process */}
+        <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-12 sm:p-16 text-center flex justify-between shadow-2xl">
+          <div className="flex   items-center">
+            <h2 className="text-4xl sm:text-4xl font-bold text-white ">START YOUR MIGRATION JOURNEY</h2>
+          </div>
+          <div>
+            <Link to="/migration">
+            <button className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2">
+              <span>Start Migration</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+            </Link>
           </div>
         </div>
 

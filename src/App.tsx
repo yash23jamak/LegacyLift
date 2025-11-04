@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AppProvider } from "./contexts/useContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AnalysisPage from "./components/analysisUI";
@@ -11,6 +12,7 @@ import Home from "./pages/home";
 import BackButton from "./components/BackButton";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import MigrationUI from "./components/migrationUI";
 
 const queryClient = new QueryClient();
 
@@ -40,18 +42,21 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/upload" element={<Index />} />
-            <Route path="/analysis" element={<AnalysisPage />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
+      <AppProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/upload" element={<Index />} />
+              <Route path="/analysis" element={<AnalysisPage />} />
+              <Route path="/migration" element={<MigrationUI     />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </AppProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

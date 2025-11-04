@@ -115,6 +115,7 @@ export const FileUploadZone = ({
 
     if (allowedFiles.length > 0) {
       await onFilesUpload(allowedFiles);
+      console.log('allowedFiles: ', allowedFiles);
     } else {
       toast({
         title: "Upload Failed!",
@@ -126,6 +127,7 @@ export const FileUploadZone = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const files = Array.from(e.target.files);
+
 
       const allowedFiles = filterAllowedFiles(files);
 
@@ -141,7 +143,7 @@ export const FileUploadZone = ({
         e.target.value = "";
         return;
       }
-
+      
       if (allowedFiles.length > 0) {
         onFilesUpload(allowedFiles);
       } else {

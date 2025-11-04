@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CheckCircle, Brain, Zap, Target } from "lucide-react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
 import { ANALYSIS_PROMPT, REPO_ANALYSIS_PROMPT } from "@/prompt/analysisPrompt";
 import { Card } from "@/components/ui/card";
+import { useAppContext } from "@/contexts/useContext";
+
 
 const Index = () => {
   const [filesContent, setFilesContent] = useState<
@@ -15,6 +17,7 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
+  const { setuploadedFileContext } = useAppContext();
   // API Credentials
   const apiUrl = import.meta.env.VITE_API_URL;
   const apiKey = import.meta.env.VITE_API_KEY;
@@ -44,6 +47,8 @@ const Index = () => {
     Project Files:
 ${combinedContent}
 `;
+
+setuploadedFileContext(combinedContent);
 
     try {
       const response = await fetch(apiUrl, {
