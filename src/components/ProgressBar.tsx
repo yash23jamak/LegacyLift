@@ -11,18 +11,15 @@ import {
 import { Card } from "./ui/card";
 import { useEffect, useState } from "react";
 import { AnalysisPageProps } from "./analysisUI";
-import { useNavigate } from "react-router-dom";
 
 const ProgressBar = ({
   isReportData,
-  ananlysisAPIData,
 }: {
   isReportData?: boolean;
   ananlysisAPIData: AnalysisPageProps;
 }) => {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("");
-  const navigate = useNavigate();
 
   // ***********************
   useEffect(() => {
@@ -59,8 +56,6 @@ const ProgressBar = ({
       setTimeout(() => {
         setAnalysisProgress(100);
         setCurrentStep("Complete");
-
-        navigate("/analysis", { state: { ananlysisAPIData } });
       }, 500); // Optional delay before showing "Complete"
     }
   }, [isReportData]); // Completes only when isReportData becomes true

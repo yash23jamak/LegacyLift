@@ -1,15 +1,12 @@
 // Latest code Except Java Backend files
 import { useState } from "react";
 import { Upload, FileCode, ExternalLink, Github } from "lucide-react";
-import {
-  Card
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "./ProgressBar";
 import { AnalysisPageProps } from "./analysisUI";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Input } from "./ui/input";
-import { ALLOWED_EXTENSIONS } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 
 interface FileUploadZoneProps {
@@ -29,19 +26,10 @@ export const FileUploadZone = ({
   isReportData = false,
   ananlysisAPIData,
 }: FileUploadZoneProps) => {
-
   const [isDragging, setIsDragging] = useState(false);
-  const [githubUrl, setGithubUrl] = useState('');
-  const [activeTab, setActiveTab] = useState('upload');
+  const [githubUrl, setGithubUrl] = useState("");
+  const [activeTab, setActiveTab] = useState("upload");
   const { toast } = useToast();
-
-  const filterAllowedFiles = (files: File[]) => {
-    return files.filter((file) =>
-      ALLOWED_EXTENSIONS.some((ext) =>
-        file.name.toLowerCase().endsWith(ext)
-      )
-    );
-  };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -53,110 +41,81 @@ export const FileUploadZone = ({
     setIsDragging(false);
   };
 
-  const handleDrop = async (e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
 
-    const items = Array.from(e.dataTransfer.items);
-    const files: File[] = [];
+    const files = Array.from(e.dataTransfer.files);
 
-    const traverseFileTree = async (item: any, path = '') => {
-      if (item.isFile) {
-        const file = await new Promise<File>((resolve) =>
-          item.file((file: File) => resolve(file))
-        );
-        (file as any).customRelativePath = path + file.name;
-        files.push(file);
-      } else if (item.isDirectory) {
-        const dirReader = item.createReader();
-        const readEntries = () =>
-          new Promise<any[]>((resolve) => dirReader.readEntries(resolve));
-        let entries = await readEntries();
-        while (entries.length) {
-          for (const entry of entries) {
-            await traverseFileTree(entry, path + item.name + '/');
-          }
-          entries = await readEntries();
-        }
-      }
-    };
-
-    for (const item of items) {
-      const entry = item.webkitGetAsEntry?.();
-      if (entry) {
-        await traverseFileTree(entry);
-      }
+    if (files.length === 0) {
+      toast({ title: "No files dropped" });
+      return;
     }
 
-    const allowedFiles = filterAllowedFiles(files);
-    const hasZip = files.some(file => file.name.toLowerCase().endsWith('.zip'));
-
-    // ✅ Check if any JSP file exists
-    const hasJspFile = allowedFiles.some(file =>
-      file.name.toLowerCase().endsWith(".jsp")
-    );
-
-    if (!hasJspFile) {
+    if (files.length > 1) {
       toast({
-        title: "Upload Failed!",
-        description: "Not a JSP Project. Please Re-Upload.",
+        variant: "destructive",
+        title: "Too Many Files",
+        description: "Please upload a single .zip file.",
       });
       return;
     }
 
-
-    if (hasZip) {
+    const file = files[0];
+    if (!file.name.toLowerCase().endsWith(".zip")) {
       toast({
-        title: "Upload Failed!",
-        description: "ZIP files are not allowed. Please upload unzipped project folders.",
+        variant: "destructive",
+        title: "Invalid File",
+        description: "Only .zip files are supported.",
       });
       return;
     }
 
-    if (allowedFiles.length > 0) {
-      await onFilesUpload(allowedFiles);
-    } else {
-      toast({
-        title: "Upload Failed!",
-        description: "No supported files found in the folder.",
-      });
-    }
+    onFilesUpload([file]); // send the ZIP file directly
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const files = Array.from(e.target.files);
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
 
-      const allowedFiles = filterAllowedFiles(files);
-
-      const hasJspFile = allowedFiles.some(file =>
-        file.name.toLowerCase().endsWith(".jsp")
-      );
-
-      if (!hasJspFile) {
+      // ✅ Only allow .zip
+      if (!file.name.toLowerCase().endsWith(".zip")) {
         toast({
-          title: "Upload Failed!",
-          description: "Not a JSP Project. Please Re-Upload.",
+          variant: "destructive",
+          title: "Invalid File Type",
+          description: "Please upload a .zip file containing your JSP project.",
         });
         e.target.value = "";
         return;
       }
 
-      if (allowedFiles.length > 0) {
-        onFilesUpload(allowedFiles);
-      } else {
-        alert("No supported files found");
-      }
-
+      // ✅ Pass the raw ZIP file (not content) to onFilesUpload
+      onFilesUpload([file]);
       e.target.value = "";
     }
   };
 
   const popularRepos = [
-    { name: 'Apache Struts', tech: 'Legacy MVC framework using JSP', icon: '🏛️' },
-    { name: 'Spring MVC', tech: 'Java-based web framework with JSP views', icon: '🌱' },
-    { name: 'JSF (JavaServer Faces)', tech: 'Component-based UI framework for Java EE', icon: '🎭' },
-    { name: 'JSP Examples', tech: 'Sample JSP projects and templates', icon: '📄' }
+    {
+      name: "Apache Struts",
+      tech: "Legacy MVC framework using JSP",
+      icon: "🏛️",
+    },
+    {
+      name: "Spring MVC",
+      tech: "Java-based web framework with JSP views",
+      icon: "🌱",
+    },
+    {
+      name: "JSF (JavaServer Faces)",
+      tech: "Component-based UI framework for Java EE",
+      icon: "🎭",
+    },
+    {
+      name: "JSP Examples",
+      tech: "Sample JSP projects and templates",
+      icon: "📄",
+    },
   ];
 
   return (
@@ -168,7 +127,11 @@ export const FileUploadZone = ({
         />
       ) : (
         <Card className="overflow-hidden">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="w-full"
+          >
             {/* Tabs Header */}
             <TabsList className="w-full grid grid-cols-2 rounded-none border-b bg-muted/50">
               <TabsTrigger
@@ -195,29 +158,29 @@ export const FileUploadZone = ({
                   onDragOver={handleDragOver}
                   onDragLeave={handleDragLeave}
                   onDrop={handleDrop}
-                  className={`relative border-3 border-dashed rounded-2xl p-16 text-center transition-all ${isDragging ? 'border-primary bg-primary/5' : 'border-border bg-muted/30'
-                    }`}
+                  className={`relative border-3 border-dashed rounded-2xl p-16 text-center transition-all ${
+                    isDragging
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-muted/30"
+                  }`}
                 >
                   <input
                     type="file"
-                    accept=".jsp,.html,.htm"
-                    multiple
+                    accept=".zip"
                     onChange={handleFileChange}
                     className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
                     id="file-upload"
                     disabled={isLoading}
-                    webkitdirectory="true"
-                    directory="true"
                   />
 
                   <div className="w-20 h-20 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
                     <Upload className="w-10 h-10 text-primary" />
                   </div>
                   <h3 className="text-3xl font-semibold text-foreground mb-3">
-                    Upload Your Legacy JSP Project
+                    Upload Your JSP Project as a ZIP File
                   </h3>
                   <p className="text-muted-foreground mb-8">
-                    Drag and drop your project files or click to browse
+                    Drag & drop a .zip file or click to browse
                   </p>
                   <Button
                     size="lg"
@@ -229,31 +192,8 @@ export const FileUploadZone = ({
 
                   <div className="mt-10 pt-8 border-t border-border">
                     <p className="text-sm font-semibold text-muted-foreground mb-4">
-                      Supported file types:
+                      Your ZIP must contain .jsp files.
                     </p>
-                    <div className="flex flex-wrap justify-center gap-2">
-                      {[
-                        '.js',
-                        '.html',
-                        '.css',
-                        '.tsx',
-                        '.jsx',
-                        '.ts',
-                        '.scss',
-                        '.less',
-                        '.sass',
-                        '.md',
-                        '.json',
-                        '.jsp',
-                      ].map((ext) => (
-                        <span
-                          key={ext}
-                          className="px-3 py-1.5 bg-secondary border border-border rounded-lg text-sm text-secondary-foreground font-mono font-medium"
-                        >
-                          {ext}
-                        </span>
-                      ))}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -303,7 +243,11 @@ export const FileUploadZone = ({
                           key={repo.name}
                           className="flex items-start gap-3 p-4 bg-card border border-border rounded-xl hover:border-primary hover:shadow-md transition-all text-left group"
                           onClick={() =>
-                            setGithubUrl(`https://github.com/${repo.name.toLowerCase().replace(/\s+/g, '-')}`)
+                            setGithubUrl(
+                              `https://github.com/${repo.name
+                                .toLowerCase()
+                                .replace(/\s+/g, "-")}`
+                            )
                           }
                         >
                           <span className="text-2xl">{repo.icon}</span>
@@ -311,7 +255,9 @@ export const FileUploadZone = ({
                             <div className="font-semibold text-foreground group-hover:text-primary transition-colors">
                               {repo.name}
                             </div>
-                            <div className="text-sm text-muted-foreground">{repo.tech}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {repo.tech}
+                            </div>
                           </div>
                           <ExternalLink className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                         </button>
@@ -323,9 +269,7 @@ export const FileUploadZone = ({
             </TabsContent>
           </Tabs>
         </Card>
-      )
-      }
-    </div >
+      )}
+    </div>
   );
-
 };
