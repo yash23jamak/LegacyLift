@@ -471,13 +471,7 @@ function Home() {
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </Link>
-              <button className="w-full sm:w-auto bg-transparent text-white px-8 py-4 rounded-xl border-2 border-white hover:bg-white hover:text-blue-600 transition-all font-semibold text-lg">
-                Schedule Consultation
-              </button>
             </div>
-            <p className="mt-6 text-blue-100 text-sm">
-              Free 30-minute consultation • No commitment required
-            </p>
           </div>
         </div>
       </section>

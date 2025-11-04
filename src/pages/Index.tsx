@@ -86,6 +86,10 @@ const Index = () => {
 
       const data = await response.json();
 
+      navigate("/analysis", {
+        state: { ananlysisAPIData: data.report },
+      });
+
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");
       setIsReportData(true);
