@@ -16,6 +16,8 @@ import {
   Users,
   Wrench
 } from 'lucide-react';
+import { FileExplorer } from './FileExplorer';
+import { dummyProjectJson } from '@/lib/mockdata';
 
 interface FeatureMapping {
   id: string;
@@ -196,6 +198,10 @@ function migrationUI() {
             A comprehensive guide mapping legacy JavaServer Pages features to their modern React equivalents
           </p>
         </header>
+
+         <div className="h-[90vh] w-full p-4">
+          <FileExplorer files={dummyProjectJson} />
+        </div>
 
         <section className="mb-16">
           <div className="flex items-center gap-3 mb-6">
