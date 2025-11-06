@@ -144,7 +144,7 @@ const ProgressBar = ({
                 return (
                   <div
                     key={item.name}
-                    className={`flex flex-col items-center p-4 rounded-xl transition-all duration-300 ${
+                    className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 ${
                       isCurrent
                         ? "bg-white shadow-lg scale-105 ring-2 ring-blue-500"
                         : isComplete
@@ -153,7 +153,7 @@ const ProgressBar = ({
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 ${
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 ${
                         isComplete
                           ? "bg-gradient-to-br from-green-400 to-emerald-500 shadow-md"
                           : isCurrent

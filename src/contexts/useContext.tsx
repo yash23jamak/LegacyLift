@@ -1,16 +1,23 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-
+interface AppContextType {
+  uploadedFileContext: any;
+  setuploadedFileContext: React.Dispatch<React.SetStateAction<any>>;
+  ProjectJson: any;
+  setProjectJson: React.Dispatch<React.SetStateAction<any>>;
+}
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [uploadedFileContext, setuploadedFileContext] = useState();
+  const [ProjectJson, setProjectJson] = useState();
+
 
 
 
   return (
-    <AppContext.Provider value={{ uploadedFileContext, setuploadedFileContext }}>
+    <AppContext.Provider value={{ uploadedFileContext, setuploadedFileContext, ProjectJson, setProjectJson }}>
       {children}
     </AppContext.Provider>
   );

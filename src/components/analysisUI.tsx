@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   Card,
   CardContent,
@@ -43,14 +43,45 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import { useAppContext } from "@/contexts/useContext";
 export interface AnalysisPageProps {
   ananlysisAPIData: string | AnalysisData;
 }
 
 const AnalysisPage = () => {
   const [data, setData] = useState<AnalysisData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const { setProjectJson } = useAppContext();
+ 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   const location = useLocation();
   const { ananlysisAPIData } = location.state || {};
+
+  // API Integration For Migration Process
+  const MigrationAPI = async () => {
+    try {
+      // setLoading(true);
+      let response = await fetch(`${backendUrl}/analyze-project`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          useCachedZip: true,
+        }),
+      });
+      let projectJson = await response.json();
+      setProjectJson(projectJson);
+
+
+      // setLoading(false);
+    } catch (error) {
+      // setLoading(false);
+      console.log("error: ", error);
+    }
+  };
 
   useEffect(() => {
     if (ananlysisAPIData) {
@@ -101,22 +132,7 @@ const AnalysisPage = () => {
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
       {/* Floating Orbs Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* <div
-          className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-cyan-300/30 to-blue-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.2}px)` }}
-        />
-        <div
-          className="absolute top-1/4 right-0 w-80 h-80 bg-gradient-to-br from-pink-300/30 to-rose-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
-        />
-        <div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-br from-yellow-300/30 to-amber-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * -0.1}px)` }}
-        />
-        <div
-          className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-300/20 to-indigo-400/20 rounded-full blur-2xl"
-          style={{ transform: `translateY(${scrollY * 0.25}px)` }}
-        /> */}
+        
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-16 space-y-16">
@@ -879,23 +895,7 @@ const AnalysisPage = () => {
               </CardContent>
             </Card>
 
-            {/* Previous Code */}
-            {/* <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
-              <h3 className="text-xl font-black text-purple-700 mb-4 flex items-center gap-2">
-                <Zap className="w-6 h-6" />
-                Suggested Tools & Technologies
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {data?.migration?.suggested_tools.map((tool, idx) => (
-                  <Badge
-                    key={idx}
-                    className="px-4 py-2 text-base bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                  >
-                    {tool}
-                  </Badge>
-                ))}
-              </div>
-            </div> */}
+       
 
             {/* Latest Code */}
             <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200">
@@ -1215,7 +1215,11 @@ const AnalysisPage = () => {
           </div>
           <div>
             <Link to="/migration">
-              <button className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2">
+              <button
+                onClick={() => MigrationAPI()}
+                // disabled={loading}
+                className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2"
+              >
                 <span>Start Migration</span>
                 <ArrowRight className="w-5 h-5" />
               </button>
@@ -1223,24 +1227,7 @@ const AnalysisPage = () => {
           </div>
         </div>
 
-        {/* CTA Section */}
-        {/* <Card className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 border-0 shadow-2xl overflow-hidden">
-          <div className="absolute  bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20" />
-          <CardContent className="relative p-12 text-center space-y-6">
-            <Rocket className="w-20 h-20 text-white mx-auto animate-bounce" />
-            <h3 className="text-5xl font-black text-white">
-              Ready to Transform?
-            </h3>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Start your migration journey today with AI-powered analysis and
-              expert guidance
-            </p>
-            <button className="group px-8 py-4 bg-white text-purple-600 rounded-2xl font-black text-lg shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 flex items-center gap-3 mx-auto">
-              Get Started Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-            </button>
-          </CardContent>
-        </Card> */}
+    
       </div>
 
       {/* Custom Scrollbar */}
