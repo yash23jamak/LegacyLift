@@ -11,6 +11,7 @@ import Home from "./pages/home";
 import BackButton from "./components/BackButton";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import MigrationUI from "./components/migrationUI";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
             <Route path="/" element={<Home />} />
             <Route path="/upload" element={<Index />} />
             <Route path="/analysis" element={<AnalysisPage />} />
+            <Route path="/migration" element={<MigrationUI />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Layout>

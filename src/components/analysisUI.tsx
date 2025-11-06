@@ -40,22 +40,21 @@ import {
   Activity,
   Search,
   Network,
+  ArrowRight,
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 export interface AnalysisPageProps {
   ananlysisAPIData: string | AnalysisData;
 }
 
 const AnalysisPage = () => {
   const [data, setData] = useState<AnalysisData | null>(null);
-  console.log("data: ", data);
   const location = useLocation();
   const { ananlysisAPIData } = location.state || {};
-  console.log(ananlysisAPIData, "ananlysisAPIData");
 
   useEffect(() => {
     if (ananlysisAPIData) {
-      console.log("Received analysis API data:", ananlysisAPIData);
+      // console.log("Received analysis API data:", ananlysisAPIData);
       try {
         if (typeof ananlysisAPIData === "string") {
           const parsed = JSON.parse(ananlysisAPIData);
@@ -959,21 +958,6 @@ const AnalysisPage = () => {
                             </Badge>
                           </div>
 
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between text-sm">
-                              <span className="font-bold text-gray-700">
-                                Progress
-                              </span>
-                              <span className="font-black text-purple-600">
-                                {phase.progress_percent}%
-                              </span>
-                            </div>
-                            <Progress
-                              value={phase.progress_percent}
-                              className="h-3"
-                            />
-                          </div>
-
                           <div className="grid md:grid-cols-2 gap-4 pt-2">
                             <div>
                               <p className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-2">
@@ -1026,100 +1010,6 @@ const AnalysisPage = () => {
                 </div>
               ))}
           </div>
-
-          {/* Overall Progress Old Code */}
-          {/* <Card className="bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 border-0 shadow-2xl">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="text-white">
-                  <p className="text-sm font-bold opacity-90 mb-1">
-                    OVERALL MIGRATION PROGRESS
-                  </p>
-                  <h3 className="text-5xl font-black">
-                    {Math.round(
-                      (data?.progress?.completed_phases /
-                        data?.progress?.total_phases) *
-                        100
-                    )}
-                    %
-                  </h3>
-                  <p className="text-white/90 mt-2 text-lg">
-                    {data?.progress?.completed_phases} of{" "}
-                    {data?.progress?.total_phases} phases completed
-                  </p>
-                </div>
-                <Award className="w-20 h-20 text-white/80" />
-              </div>
-              <Progress
-                value={
-                  (data?.progress?.completed_phases /
-                    data?.progress?.total_phases) *
-                  100
-                }
-                className="h-6 bg-white/20"
-              />
-              <div className="mt-6 space-y-2">
-                <p className="text-white/90 font-bold">Milestones</p>
-                <div className="flex flex-wrap gap-2">
-                  {data?.progress?.milestones.map((milestone, idx) => (
-                    <Badge
-                      key={idx}
-                      className="px-3 py-1.5 bg-white/20 text-white border-2 border-white/30 hover:bg-white/30 transition-all"
-                    >
-                      {milestone}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card> */}
-
-          {/* New Design changes  */}
-          <Card className="bg-gradient-to-r from-indigo-200 via-sky-200 to-teal-200 border-0 shadow-2xl">
-            <CardContent className="p-8">
-              <div className="flex items-center justify-between mb-6">
-                <div className="text-gray-800">
-                  <p className="text-sm font-bold opacity-90 mb-1">
-                    OVERALL MIGRATION PROGRESS
-                  </p>
-                  <h3 className="text-5xl font-black">
-                    {Math.round(
-                      (data?.progress?.completed_phases /
-                        data?.progress?.total_phases) *
-                        100
-                    )}
-                    %
-                  </h3>
-                  <p className="text-gray-700 mt-2 text-lg">
-                    {data?.progress?.completed_phases} of{" "}
-                    {data?.progress?.total_phases} phases completed
-                  </p>
-                </div>
-                <Award className="w-20 h-20 text-gray-500" />
-              </div>
-              <Progress
-                value={
-                  (data?.progress?.completed_phases /
-                    data?.progress?.total_phases) *
-                  100
-                }
-                className="h-6 bg-gray-300"
-              />
-              <div className="mt-6 space-y-2">
-                <p className="text-gray-700 font-bold">Milestones</p>
-                <div className="flex flex-wrap gap-2">
-                  {data?.progress?.milestones.map((milestone, idx) => (
-                    <Badge
-                      key={idx}
-                      className="px-3 py-1.5 bg-gray-200 text-gray-800 border border-gray-300 hover:bg-gray-300 transition-all"
-                    >
-                      {milestone}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         {/* AI Tools Analysis */}
@@ -1313,6 +1203,23 @@ const AnalysisPage = () => {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </div>
+
+        {/* Migration Process */}
+        <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-12 sm:p-16 text-center flex justify-between shadow-2xl">
+          <div className="flex   items-center">
+            <h2 className="text-4xl sm:text-4xl font-bold text-white ">
+              START YOUR MIGRATION JOURNEY
+            </h2>
+          </div>
+          <div>
+            <Link to="/migration">
+              <button className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2">
+                <span>Start Migration</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </Link>
           </div>
         </div>
 
