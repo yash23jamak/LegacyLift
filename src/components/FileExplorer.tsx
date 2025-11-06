@@ -12,30 +12,8 @@ import {
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { FileExplorerProps, ProjectFile, TreeNodeProps, VirtualNode } from "@/type/fileExplorerType";
 
-// Input type: flat list of files
-export interface ProjectFile {
-  name: string; // e.g. "src/app/store.ts"
-  content: string;
-}
-
-// Virtual node for rendering (not stored in state)
-type VirtualNode =
-  | { type: "file"; name: string; path: string; content: string }
-  | {
-      type: "folder";
-      name: string;
-      path: string;
-      children: Record<string, VirtualNode>;
-    };
-
-interface TreeNodeProps {
-  node: VirtualNode;
-  level: number;
-  onSelect: (path: string, content: string) => void;
-  selectedPath: string;
-  onToggle?: () => void;
-}
 
 const TreeNode: React.FC<TreeNodeProps> = ({
   node,
@@ -188,9 +166,6 @@ function buildTreeFromFiles(files: ProjectFile[]): VirtualNode[] {
     .map(([_, node]) => node);
 }
 
-interface FileExplorerProps {
-  files: ProjectFile[];
-}
 
 export const FileExplorer: React.FC<FileExplorerProps> = ({ files }) => {
   const [selectedPath, setSelectedPath] = useState<string>("");
