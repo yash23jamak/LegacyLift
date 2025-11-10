@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { Card } from "./ui/card";
 import { useEffect, useState } from "react";
-import { AnalysisPageProps } from "./analysisUI";
+import { AnalysisPageProps } from "../pages/analysisUI";
 
 const ProgressBar = ({
   isReportData,
@@ -97,7 +97,7 @@ const ProgressBar = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {[
                 {
                   progress: 10,

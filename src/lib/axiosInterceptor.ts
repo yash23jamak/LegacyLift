@@ -1,20 +1,20 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
 
 // Environment variables for Vite
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
-const API_TIMEOUT = 10000;
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api/v1';
+// const API_TIMEOUT = 10000;
 
 // Create axios instance with default configuration
-const api: AxiosInstance = axios.create({
+const APIInterceptor: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
-  timeout: API_TIMEOUT,
+  // timeout: API_TIMEOUT,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
 // Request Interceptor
-api.interceptors.request.use(
+APIInterceptor.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
     // Add authorization token if available
     const token = getAuthToken();
@@ -40,7 +40,7 @@ api.interceptors.request.use(
 );
 
 // Response Interceptor
-api.interceptors.response.use(
+APIInterceptor.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => {
     // Return successful responses as-is
     return response;
@@ -129,7 +129,7 @@ function handleNetworkError(): void {
   // toast.error(message);
 }
 
-export default api;
+export default APIInterceptor;
 
 // Export additional utilities if needed
-export { api };
+export { APIInterceptor };

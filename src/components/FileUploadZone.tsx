@@ -4,7 +4,7 @@ import { Upload, FileCode, ExternalLink, Github } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "./ProgressBar";
-import { AnalysisPageProps } from "./analysisUI";
+import { AnalysisPageProps } from "../pages/analysisUI";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@radix-ui/react-tabs";
 import { Input } from "./ui/input";
 import { useToast } from "@/hooks/use-toast";

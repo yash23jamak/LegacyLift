@@ -2,22 +2,22 @@ import { useEffect, useState } from "react";
 import {
   ArrowRight,
   Code2,
-  Zap,
   Box,
   RefreshCw,
   Layers,
   TrendingUp,
   CheckCircle2,
-  Filter,
-  ArrowUpDown,
   Gauge,
   Users,
-  Wrench,
+  ScanSearch,
 } from "lucide-react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";
 import { Progress } from "@/components/ui/progress";
+import { FileExplorer } from "../components/FileExplorer";
+import { dummyProjectJson } from "@/lib/mockdata";
+import MigrationAnalysis from "@/components/MigrationAnalysis";
 
 interface FeatureMapping {
   id: string;
@@ -29,18 +29,12 @@ interface FeatureMapping {
   benefits: string[];
 }
 
-interface TechStackItem {
-  name: string;
-  role: string;
-  type: "legacy" | "modern";
-}
-
 function migrationUI() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"name" | "complexity">("name");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-    const { ProjectJson } = useAppContext();
+  const { ProjectJson, MigrationReportJson } = useAppContext();
 
   const featureMappings: FeatureMapping[] = [
     {
@@ -125,45 +119,6 @@ function migrationUI() {
     },
   ];
 
-  const modernCapabilities = [
-    {
-      icon: Box,
-      title: "Component Reuse",
-      description: "Build once, use everywhere with props-based customization",
-    },
-    {
-      icon: RefreshCw,
-      title: "React Hooks",
-      description:
-        "useState, useEffect, useContext for powerful state management",
-    },
-    {
-      icon: Layers,
-      title: "State Management",
-      description: "Context API, Redux, Zustand for complex application state",
-    },
-    {
-      icon: Zap,
-      title: "Client-Side Routing",
-      description: "Fast navigation without page reloads using React Router",
-    },
-  ];
-
-  const techStack: TechStackItem[] = [
-    {
-      name: "JSP (JavaServer Pages)",
-      role: "Server-Side Rendering",
-      type: "legacy",
-    },
-    { name: "Java Servlets", role: "Request Handling", type: "legacy" },
-    { name: "jQuery", role: "DOM Manipulation", type: "legacy" },
-    { name: "JSTL", role: "Template Logic", type: "legacy" },
-    { name: "ReactJS 18+", role: "UI Library", type: "modern" },
-    { name: "TypeScript", role: "Type Safety", type: "modern" },
-    { name: "Vite", role: "Build Tool", type: "modern" },
-    { name: "Tailwind CSS", role: "Styling Framework", type: "modern" },
-  ];
-
   const improvements = [
     {
       icon: Gauge,
@@ -191,27 +146,22 @@ function migrationUI() {
     },
   ];
 
-  const categories = [
-    { value: "all", label: "All Features" },
-    { value: "rendering", label: "Rendering" },
-    { value: "state", label: "State Management" },
-    { value: "routing", label: "Routing" },
-    { value: "data", label: "Data Fetching" },
-    { value: "ui", label: "UI Updates" },
-  ];
+  const summaryIcons = [Gauge, Box, TrendingUp, Users];
 
-  const filteredMappings = featureMappings
-    .filter(
-      (mapping) =>
-        selectedCategory === "all" || mapping.category === selectedCategory
-    )
-    .sort((a, b) => {
-      if (sortBy === "complexity") {
-        const complexityOrder = { low: 1, medium: 2, high: 3 };
-        return complexityOrder[b.complexity] - complexityOrder[a.complexity];
-      }
-      return a.legacyFeature.localeCompare(b.legacyFeature);
-    });
+  const filteredMappings =
+    MigrationReportJson?.[0] ??
+    featureMappings
+      .filter(
+        (mapping) =>
+          selectedCategory === "all" || mapping.category === selectedCategory
+      )
+      .sort((a, b) => {
+        if (sortBy === "complexity") {
+          const complexityOrder = { low: 1, medium: 2, high: 3 };
+          return complexityOrder[b.complexity] - complexityOrder[a.complexity];
+        }
+        return a.legacyFeature.localeCompare(b.legacyFeature);
+      });
 
   const getComplexityColor = (complexity: string) => {
     switch (complexity) {
@@ -246,7 +196,7 @@ function migrationUI() {
   // API Integration For Migration Process
   const GenerateZIP = async () => {
     try {
-          setLoading(true);
+      setLoading(true);
       const zip = new JSZip();
       // Add each file to the ZIP
       ProjectJson?.forEach((file: { name: string; content: string }) => {
@@ -270,7 +220,7 @@ function migrationUI() {
   useEffect(() => {
     if (!ProjectJson) {
       const interval = setInterval(() => {
-        setProgress(prev => prev < 90 ? prev + 10 : prev);
+        setProgress((prev) => (prev < 90 ? prev + 10 : prev));
       }, 500);
       return () => clearInterval(interval);
     } else {
@@ -280,11 +230,22 @@ function migrationUI() {
 
   if (!ProjectJson) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center">
-        <div className="max-w-md mx-auto text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">Loading Project Data</h2>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex  justify-center">
+        <div className="max-w-2xl mx-auto text-center pt-5">
+          <h1 className="tracking-tight text-5xl font-black bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent pb-4">
+            Legacy JSP to Modern React
+          </h1>
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-7">
+            A comprehensive guide mapping legacy JavaServer Pages features to
+            their modern React equivalents
+          </p>
+          <h2 className="text-2xl font-bold text-slate-900 mb-4">
+            Loading Project Data
+          </h2>
           <Progress value={progress} className="mb-4" />
-          <p className="text-slate-600">Please wait while we prepare your migration data...</p>
+          <p className="text-slate-600">
+            Please wait while we prepare your migration data...
+          </p>
         </div>
       </div>
     );
@@ -293,50 +254,7 @@ function migrationUI() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <header className="mb-12 text-center">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <Wrench className="w-4 h-4" />
-            Technical Migration Case Study
-          </div>
-          <h1 className="text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-            Legacy JSP to Modern React
-          </h1>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-            A comprehensive guide mapping legacy JavaServer Pages features to
-            their modern React equivalents
-          </p>
-        </header>
-
-        <section className="mb-16">
-          <div className="flex items-center gap-3 mb-6">
-            <Zap className="w-7 h-7 text-blue-600" />
-            <h2 className="text-3xl font-bold text-slate-900">
-              Modern React Capabilities
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {modernCapabilities.map((capability, index) => {
-              const Icon = capability.icon;
-              return (
-                <div
-                  key={index}
-                  className="group bg-white rounded-xl p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 hover:border-blue-300 hover:-translate-y-1"
-                >
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    {capability.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
-                    {capability.description}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </section>
-
+        <MigrationAnalysis />
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -344,31 +262,6 @@ function migrationUI() {
               <h2 className="text-3xl font-bold text-slate-900">
                 Feature Mapping Comparison
               </h2>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 bg-white rounded-lg shadow-sm border border-slate-200 p-2">
-                <Filter className="w-4 h-4 text-slate-400 ml-2" />
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="bg-transparent border-none text-sm font-medium text-slate-700 focus:outline-none pr-3"
-                >
-                  {categories.map((cat) => (
-                    <option key={cat.value} value={cat.value}>
-                      {cat.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <button
-                onClick={() =>
-                  setSortBy(sortBy === "name" ? "complexity" : "name")
-                }
-                className="flex items-center gap-2 bg-white rounded-lg shadow-sm border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                <ArrowUpDown className="w-4 h-4" />
-                Sort by {sortBy === "name" ? "Complexity" : "Name"}
-              </button>
             </div>
           </div>
 
@@ -451,120 +344,6 @@ function migrationUI() {
           </div>
         </section>
 
-        <section className="mb-16">
-          <div className="flex items-center gap-3 mb-6">
-            <Layers className="w-7 h-7 text-blue-600" />
-            <h2 className="text-3xl font-bold text-slate-900">
-              Technology Stack Overview
-            </h2>
-          </div>
-          <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-sm font-bold text-slate-600">
-                    1
-                  </span>
-                  Legacy Stack
-                </h3>
-                <div className="space-y-3">
-                  {techStack
-                    .filter((item) => item.type === "legacy")
-                    .map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-4 bg-slate-50 rounded-lg border border-slate-200"
-                      >
-                        <div>
-                          <div className="font-semibold text-slate-900">
-                            {item.name}
-                          </div>
-                          <div className="text-sm text-slate-600">
-                            {item.role}
-                          </div>
-                        </div>
-                        <div className="w-2 h-2 bg-slate-400 rounded-full"></div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                  <span className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center text-sm font-bold text-white">
-                    2
-                  </span>
-                  Modern Stack
-                </h3>
-                <div className="space-y-3">
-                  {techStack
-                    .filter((item) => item.type === "modern")
-                    .map((item, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center justify-between p-4 bg-blue-50 rounded-lg border border-blue-200"
-                      >
-                        <div>
-                          <div className="font-semibold text-slate-900">
-                            {item.name}
-                          </div>
-                          <div className="text-sm text-blue-600">
-                            {item.role}
-                          </div>
-                        </div>
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      </div>
-                    ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-8 pt-8 border-t border-slate-200">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Gauge className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">
-                      Performance
-                    </h4>
-                    <p className="text-sm text-slate-600">
-                      Faster rendering and optimized bundle sizes
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Code2 className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">
-                      Developer Experience
-                    </h4>
-                    <p className="text-sm text-slate-600">
-                      Better tooling, debugging, and type safety
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <TrendingUp className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">
-                      Maintainability
-                    </h4>
-                    <p className="text-sm text-slate-600">
-                      Modular architecture with easier updates
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         <section>
           <div className="flex items-center gap-3 mb-6">
             <TrendingUp className="w-7 h-7 text-blue-600" />
@@ -573,30 +352,40 @@ function migrationUI() {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {improvements.map((improvement, index) => {
-              const Icon = improvement.icon;
-              return (
-                <div
-                  key={index}
-                  className="bg-gradient-to-br from-white to-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                >
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                      <Icon className="w-6 h-6 text-white" />
+            {(MigrationReportJson?.[1] || improvements).map(
+              (improvement, index) => {
+                const Icon = summaryIcons[index];
+                return (
+                  <div
+                    key={index}
+                    className="bg-gradient-to-br from-white to-slate-50 rounded-xl p-6 shadow-sm border border-slate-200 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                        <Icon className="w-6 h-6 text-white" />
+                      </div>
+                      <div className="text-3xl font-bold text-blue-600">
+                        {improvement.stat}
+                      </div>
                     </div>
-                    <div className="text-3xl font-bold text-blue-600">
-                      {improvement.stat}
-                    </div>
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                      {improvement.title}
+                    </h3>
+                    <p className="text-slate-600 text-sm leading-relaxed">
+                      {improvement.description}
+                    </p>
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    {improvement.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed">
-                    {improvement.description}
-                  </p>
-                </div>
-              );
-            })}
+                );
+              }
+            )}
+          </div>
+          <div className="flex items-center gap-3 mb-6 mt-12">
+            <ScanSearch className="w-7 h-7 text-blue-600" />
+            <h2 className="text-3xl font-bold text-slate-900">Code Preview</h2>
+          </div>
+
+          <div className="h-[90vh] w-full p-4">
+            <FileExplorer files={ProjectJson || dummyProjectJson} />
           </div>
 
           <div className="mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 text-white shadow-lg">
@@ -622,10 +411,6 @@ function migrationUI() {
             </div>
           </div>
         </section>
-
-        {/* <footer className="mt-16 pt-8 border-t border-slate-200 text-center text-slate-600 text-sm">
-          <p>Technical Migration Case Study · {new Date().getFullYear()}</p>
-        </footer> */}
       </div>
     </div>
   );
