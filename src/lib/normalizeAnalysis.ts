@@ -115,7 +115,8 @@ function extractJson(text: string): string | null {
   // Remove any leading content before the first opening brace
   const firstBrace = cleaned.indexOf("{");
   const lastBrace = cleaned.lastIndexOf("}");
-  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace) return null;
+  if (firstBrace === -1 || lastBrace === -1 || lastBrace <= firstBrace)
+    return null;
   cleaned = cleaned.slice(firstBrace, lastBrace + 1);
 
   // Remove trailing commas inside objects/arrays
@@ -178,13 +179,17 @@ function toStringArray(value: unknown, fallback: string[] = []): string[] {
 /**
  * Map dependencies safely from unknown.
  */
-function mapDependencies(list: unknown): AnalysisResult["dependencies"]["list"] {
+function mapDependencies(
+  list: unknown,
+): AnalysisResult["dependencies"]["list"] {
   if (!Array.isArray(list)) return [];
   return list.map((raw: unknown) => {
     const d = raw as Record<string, unknown>;
     const statusRaw = d["status"];
     const status: "up-to-date" | "outdated" | "vulnerable" =
-      statusRaw === "outdated" || statusRaw === "vulnerable" ? (statusRaw as "outdated" | "vulnerable") : "up-to-date";
+      statusRaw === "outdated" || statusRaw === "vulnerable"
+        ? (statusRaw as "outdated" | "vulnerable")
+        : "up-to-date";
     return {
       name: toString(d["name"]),
       version: toString(d["version"]),
@@ -221,23 +226,46 @@ function coerceSchema(obj: unknown): AnalysisResult {
   const project = (root["project"] ?? {}) as Record<string, unknown>;
   const analysis = (root["analysis"] ?? {}) as Record<string, unknown>;
   const dependencies = (root["dependencies"] ?? {}) as Record<string, unknown>;
-  const vulnerabilities = (root["vulnerabilities"] ?? {}) as Record<string, unknown>;
+  const vulnerabilities = (root["vulnerabilities"] ?? {}) as Record<
+    string,
+    unknown
+  >;
   const migration = (root["migration"] ?? {}) as Record<string, unknown>;
   const ai_tools = (root["ai_tools"] ?? {}) as Record<string, unknown>;
   const progress = (root["progress"] ?? {}) as Record<string, unknown>;
 
-  const component_hierarchy = (analysis["component_hierarchy"] ?? {}) as Record<string, unknown>;
+  const component_hierarchy = (analysis["component_hierarchy"] ?? {}) as Record<
+    string,
+    unknown
+  >;
   const modularity = (analysis["modularity"] ?? {}) as Record<string, unknown>;
-  const outdated_code = (analysis["outdated_code"] ?? {}) as Record<string, unknown>;
-  const mixed_patterns = (analysis["mixed_patterns"] ?? {}) as Record<string, unknown>;
-  const legacy_state_management = (analysis["legacy_state_management"] ?? {}) as Record<string, unknown>;
+  const outdated_code = (analysis["outdated_code"] ?? {}) as Record<
+    string,
+    unknown
+  >;
+  const mixed_patterns = (analysis["mixed_patterns"] ?? {}) as Record<
+    string,
+    unknown
+  >;
+  const legacy_state_management = (analysis["legacy_state_management"] ??
+    {}) as Record<string, unknown>;
 
   const strategy = (migration["strategy"] ?? {}) as Record<string, unknown>;
 
-  const legacy_analysis = (ai_tools["legacy_analysis"] ?? {}) as Record<string, unknown>;
-  const dependency_mapping = (ai_tools["dependency_mapping"] ?? {}) as Record<string, unknown>;
-  const complexity_scoring = (ai_tools["complexity_scoring"] ?? {}) as Record<string, unknown>;
-  const anti_pattern_detection = (ai_tools["anti_pattern_detection"] ?? {}) as Record<string, unknown>;
+  const legacy_analysis = (ai_tools["legacy_analysis"] ?? {}) as Record<
+    string,
+    unknown
+  >;
+  const dependency_mapping = (ai_tools["dependency_mapping"] ?? {}) as Record<
+    string,
+    unknown
+  >;
+  const complexity_scoring = (ai_tools["complexity_scoring"] ?? {}) as Record<
+    string,
+    unknown
+  >;
+  const anti_pattern_detection = (ai_tools["anti_pattern_detection"] ??
+    {}) as Record<string, unknown>;
 
   const safe: AnalysisResult = {
     project: {
@@ -283,7 +311,8 @@ function coerceSchema(obj: unknown): AnalysisResult {
     vulnerabilities: {
       count: toNumber(vulnerabilities["count"], 0),
       risk_level:
-        vulnerabilities["risk_level"] === "Medium" || vulnerabilities["risk_level"] === "High"
+        vulnerabilities["risk_level"] === "Medium" ||
+        vulnerabilities["risk_level"] === "High"
           ? (vulnerabilities["risk_level"] as RiskLevel)
           : "Low",
       details: toStringArray(vulnerabilities["details"]),
@@ -295,7 +324,9 @@ function coerceSchema(obj: unknown): AnalysisResult {
         overview: toString(strategy["overview"]),
         benefits: toStringArray(strategy["benefits"]),
         risks: toStringArray(strategy["risks"]),
-        technical_considerations: toStringArray(strategy["technical_considerations"]),
+        technical_considerations: toStringArray(
+          strategy["technical_considerations"],
+        ),
       },
       phases: mapPhases(migration["phases"]),
     },
@@ -334,7 +365,11 @@ export function normalizeResponseTextToJson(text: string): NormalizeResult {
   const raw = text ?? "";
   const jsonText = extractJson(raw);
   if (!jsonText) {
-    return { data: null, error: "Unable to extract JSON content from response.", raw };
+    return {
+      data: null,
+      error: "Unable to extract JSON content from response.",
+      raw,
+    };
   }
 
   try {
@@ -349,7 +384,11 @@ export function normalizeResponseTextToJson(text: string): NormalizeResult {
       const normalized = coerceSchema(parsed);
       return { data: normalized, raw: retried };
     } catch (_err) {
-      return { data: null, error: "Invalid JSON after normalization attempts.", raw: jsonText };
+      return {
+        data: null,
+        error: "Invalid JSON after normalization attempts.",
+        raw: jsonText,
+      };
     }
   }
 }

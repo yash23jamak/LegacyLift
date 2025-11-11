@@ -106,8 +106,7 @@ const AnalysisPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
       {/* Floating Orbs Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-      </div>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none"></div>
 
       <div className="relative z-10 container mx-auto px-4 py-16 space-y-16">
         {/* Hero Section */}
@@ -188,10 +187,11 @@ const AnalysisPage = () => {
                   return (
                     <div
                       key={idx}
-                      className={`absolute inset-0 transition-all duration-700 ${isActive
-                        ? "opacity-100 scale-100 rotate-0"
-                        : "opacity-0 scale-90 rotate-12"
-                        }`}
+                      className={`absolute inset-0 transition-all duration-700 ${
+                        isActive
+                          ? "opacity-100 scale-100 rotate-0"
+                          : "opacity-0 scale-90 rotate-12"
+                      }`}
                     >
                       <Card
                         className={`h-full bg-gradient-to-br ${metric.bg} border-2 border-white shadow-2xl hover:shadow-3xl transition-all duration-500`}
@@ -299,7 +299,7 @@ const AnalysisPage = () => {
                             {issue}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
 
@@ -319,7 +319,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -372,7 +372,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -423,7 +423,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -476,7 +476,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -550,7 +550,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -582,8 +582,9 @@ const AnalysisPage = () => {
                     stroke="url(#gradient)"
                     strokeWidth="12"
                     fill="none"
-                    strokeDasharray={`${(data?.analysis?.complexity_score / 100) * 553
-                      } 553`}
+                    strokeDasharray={`${
+                      (data?.analysis?.complexity_score / 100) * 553
+                    } 553`}
                     className="transition-all duration-1000"
                     strokeLinecap="round"
                   />
@@ -604,7 +605,7 @@ const AnalysisPage = () => {
                   <div className="text-center">
                     <div
                       className={`text-6xl font-black bg-gradient-to-br ${getComplexityColor(
-                        data?.analysis?.complexity_score
+                        data?.analysis?.complexity_score,
                       )} bg-clip-text text-transparent`}
                     >
                       {data?.analysis?.complexity_score}
@@ -672,7 +673,7 @@ const AnalysisPage = () => {
               <div className="text-center p-6 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200">
                 <div
                   className={`text-5xl font-black bg-gradient-to-br ${getRiskColor(
-                    data?.vulnerabilities?.risk_level
+                    data?.vulnerabilities?.risk_level,
                   )} bg-clip-text text-transparent mb-2`}
                 >
                   {data?.vulnerabilities?.count}
@@ -680,7 +681,7 @@ const AnalysisPage = () => {
                 <p className="text-sm text-gray-600">Vulnerabilities Found</p>
                 <Badge
                   className={`mt-3 px-4 py-1.5 bg-gradient-to-r ${getRiskColor(
-                    data?.vulnerabilities?.risk_level
+                    data?.vulnerabilities?.risk_level,
                   )} text-white border-0`}
                 >
                   {data?.vulnerabilities?.risk_level} Risk
@@ -730,10 +731,11 @@ const AnalysisPage = () => {
                             v{dep.version}
                           </Badge>
                           <Badge
-                            className={`${dep.status === "outdated"
-                              ? "bg-gradient-to-r from-orange-500 to-amber-500"
-                              : "bg-gradient-to-r from-emerald-500 to-teal-500"
-                              } text-white border-0 shadow-md`}
+                            className={`${
+                              dep.status === "outdated"
+                                ? "bg-gradient-to-r from-orange-500 to-amber-500"
+                                : "bg-gradient-to-r from-emerald-500 to-teal-500"
+                            } text-white border-0 shadow-md`}
                           >
                             {dep.status}
                           </Badge>
@@ -774,7 +776,8 @@ const AnalysisPage = () => {
                   Migration Strategy
                 </CardTitle>
                 <CardDescription className="text-lg mt-2">
-                  Recommended path to {data?.migration?.recommended_framework || 'React'}
+                  Recommended path to{" "}
+                  {data?.migration?.recommended_framework || "React"}
                 </CardDescription>
               </div>
               <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-xl">
@@ -861,7 +864,7 @@ const AnalysisPage = () => {
                         {consideration}
                       </span>
                     </div>
-                  )
+                  ),
                 )}
               </CardContent>
             </Card>
@@ -942,7 +945,7 @@ const AnalysisPage = () => {
                             {finding}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -988,7 +991,7 @@ const AnalysisPage = () => {
                             {finding}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
@@ -1069,7 +1072,7 @@ const AnalysisPage = () => {
                             {pattern}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
                 </div>
