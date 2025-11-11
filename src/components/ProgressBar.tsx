@@ -16,7 +16,7 @@ const ProgressBar = ({
   isReportData,
 }: {
   isReportData?: boolean;
-  ananlysisAPIData: AnalysisPageProps;
+  analysisAPIData: AnalysisPageProps;
 }) => {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("");

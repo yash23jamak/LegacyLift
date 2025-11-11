@@ -1,30 +1,33 @@
-import { Box, Layers, RefreshCw, Wrench, Zap } from 'lucide-react';
+import { Box, Layers, RefreshCw, ScanSearch, Wrench, Zap } from 'lucide-react';
 import React from 'react'
+import { FileExplorer } from './FileExplorer';
+import { ProjectFile } from '@/type/fileExplorerType';
 
-const MigrationAnalysis = () => {
-      const modernCapabilities = [
-    {
-      icon: Box,
-      title: "Component Reuse",
-      description: "Build once, use everywhere with props-based customization",
-    },
-    {
-      icon: RefreshCw,
-      title: "React Hooks",
-      description:
-        "useState, useEffect, useContext for powerful state management",
-    },
-    {
-      icon: Layers,
-      title: "State Management",
-      description: "Context API, Redux, Zustand for complex application state",
-    },
-    {
-      icon: Zap,
-      title: "Client-Side Routing",
-      description: "Fast navigation without page reloads using React Router",
-    },
-  ];
+const modernCapabilities = [
+  {
+    icon: Box,
+    title: "Component Reuse",
+    description: "Build once, use everywhere with props-based customization",
+  },
+  {
+    icon: RefreshCw,
+    title: "React Hooks",
+    description:
+      "useState, useEffect, useContext for powerful state management",
+  },
+  {
+    icon: Layers,
+    title: "State Management",
+    description: "Context API, Redux, Zustand for complex application state",
+  },
+  {
+    icon: Zap,
+    title: "Client-Side Routing",
+    description: "Fast navigation without page reloads using React Router",
+  },
+];
+
+const MigrationAnalysis: React.FC<{ProjectJson: ProjectFile[] | null}> = ({ProjectJson}) => {
   return (
     <>
      <header className="mb-12 text-center">
@@ -42,6 +45,13 @@ const MigrationAnalysis = () => {
         </header>
 
         <section className="mb-16">
+          <div className="flex items-center gap-3 mb-6mt-12">
+            <ScanSearch className="w-7 h-7 text-blue-600" />
+            <h2 className="text-3xl font-bold text-slate-900">Code Preview</h2>
+          </div>
+           <div className="h-[90vh] w-full p-4 mb-12">
+            <FileExplorer files={ProjectJson ?? []} />
+          </div>
           <div className="flex items-center gap-3 mb-6">
             <Zap className="w-7 h-7 text-blue-600" />
             <h2 className="text-3xl font-bold text-slate-900">

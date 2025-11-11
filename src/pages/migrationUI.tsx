@@ -9,14 +9,11 @@ import {
   CheckCircle2,
   Gauge,
   Users,
-  ScanSearch,
 } from "lucide-react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";
 import { Progress } from "@/components/ui/progress";
-import { FileExplorer } from "../components/FileExplorer";
-import { dummyProjectJson } from "@/lib/mockdata";
 import MigrationAnalysis from "@/components/MigrationAnalysis";
 
 interface FeatureMapping {
@@ -34,7 +31,7 @@ function migrationUI() {
   const [sortBy, setSortBy] = useState<"name" | "complexity">("name");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const { ProjectJson, MigrationReportJson } = useAppContext();
+  const { projectJson, migrationReportJson } = useAppContext();
 
   const featureMappings: FeatureMapping[] = [
     {
@@ -149,7 +146,7 @@ function migrationUI() {
   const summaryIcons = [Gauge, Box, TrendingUp, Users];
 
   const filteredMappings =
-    MigrationReportJson?.[0] ??
+    migrationReportJson?.[0] ??
     featureMappings
       .filter(
         (mapping) =>
@@ -199,7 +196,7 @@ function migrationUI() {
       setLoading(true);
       const zip = new JSZip();
       // Add each file to the ZIP
-      ProjectJson?.forEach((file: { name: string; content: string }) => {
+      projectJson?.forEach((file: { name: string; content: string }) => {
         zip.file(file?.name, file?.content);
       });
 
@@ -218,7 +215,7 @@ function migrationUI() {
   }, []);
 
   useEffect(() => {
-    if (!ProjectJson) {
+    if (!projectJson) {
       const interval = setInterval(() => {
         setProgress((prev) => (prev < 90 ? prev + 10 : prev));
       }, 500);
@@ -226,9 +223,9 @@ function migrationUI() {
     } else {
       setProgress(100);
     }
-  }, [ProjectJson]);
+  }, [projectJson]);
 
-  if (!ProjectJson) {
+  if (!projectJson) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex  justify-center">
         <div className="max-w-2xl mx-auto text-center pt-5">
@@ -254,7 +251,7 @@ function migrationUI() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <MigrationAnalysis />
+        <MigrationAnalysis ProjectJson={projectJson} />
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -264,9 +261,8 @@ function migrationUI() {
               </h2>
             </div>
           </div>
-
           <div className="space-y-4">
-            {filteredMappings.map((mapping) => {
+            {filteredMappings?.map((mapping) => {
               const CategoryIcon = getCategoryIcon(mapping.category);
               return (
                 <div
@@ -307,7 +303,6 @@ function migrationUI() {
                         <ArrowRight className="w-5 h-5 text-white" />
                       </div>
                     </div>
-
                     <div className="lg:col-span-6 space-y-3">
                       <div className="flex items-start gap-3">
                         <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
@@ -343,7 +338,6 @@ function migrationUI() {
             })}
           </div>
         </section>
-
         <section>
           <div className="flex items-center gap-3 mb-6">
             <TrendingUp className="w-7 h-7 text-blue-600" />
@@ -352,7 +346,7 @@ function migrationUI() {
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {(MigrationReportJson?.[1] || improvements).map(
+            {(migrationReportJson?.[1] || improvements).map(
               (improvement, index) => {
                 const Icon = summaryIcons[index];
                 return (
@@ -379,23 +373,8 @@ function migrationUI() {
               }
             )}
           </div>
-          <div className="flex items-center gap-3 mb-6 mt-12">
-            <ScanSearch className="w-7 h-7 text-blue-600" />
-            <h2 className="text-3xl font-bold text-slate-900">Code Preview</h2>
-          </div>
-
-          <div className="h-[90vh] w-full p-4">
-            <FileExplorer files={ProjectJson || dummyProjectJson} />
-          </div>
-
           <div className="mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 text-white shadow-lg">
             <div className="flex justify-between items-center gap-4">
-              {/* <div/ className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center flex-shrink-0 backdrop-blur-sm"> */}
-              {/* </div> */}
-              {/* <div className='flex items-center mx-2'>
-                <CheckCircle2 className="w-6 h-6" />
-
-              </div> */}
               <h3 className="text-2xl font-bold mb-2">
                 Migration Complete Download ZIP
               </h3>

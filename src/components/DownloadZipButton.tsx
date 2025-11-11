@@ -9,7 +9,6 @@ const DownloadZipButton = ({ files }) => {
 
 
     const { uploadedFileContext } = useAppContext();
-    console.log("uploadedFileContext: ----------", uploadedFileContext);
 
       const apiUrl = import.meta.env.VITE_API_URL;
   const apiKey = import.meta.env.VITE_API_KEY;
@@ -39,7 +38,6 @@ const DownloadZipButton = ({ files }) => {
       }
 
       const data = await response.json();
-      console.log("data: ", data);
       const resultContent =
         data.choices?.[0]?.message?.content || "Analysis failed.";
       const [report, ...codeParts] = resultContent.split("```");

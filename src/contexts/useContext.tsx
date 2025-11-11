@@ -1,12 +1,34 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
+import { ProjectFile } from "@/type/fileExplorerType";
+
+type UploadedFile = ProjectFile;
+type ProjectJsonType = UploadedFile[] | null;
+
+interface FeatureMapping {
+  id: string;
+  legacyFeature: string;
+  reactEquivalent: string;
+  description: string;
+  category: "rendering" | "state" | "routing" | "data" | "ui";
+  complexity: "low" | "medium" | "high";
+  benefits: string[];
+}
+
+interface Improvement {
+  title: string;
+  stat: string;
+  description: string;
+}
+
+type MigrationReportType = [FeatureMapping[], Improvement[]] | null;
 
 interface AppContextType {
-  uploadedFileContext: any;
-  setuploadedFileContext: React.Dispatch<React.SetStateAction<any>>;
-  ProjectJson: any;
-  setProjectJson: React.Dispatch<React.SetStateAction<any>>;
-  MigrationReportJson: any;
-  setMigrationReportJson: React.Dispatch<React.SetStateAction<any>>;
+  uploadedFileContext: UploadedFile[] | null;
+  setUploadedFileContext: React.Dispatch<React.SetStateAction<UploadedFile[] | null>>;
+  projectJson: ProjectJsonType;
+  setProjectJson: React.Dispatch<React.SetStateAction<ProjectJsonType>>;
+  migrationReportJson: MigrationReportType;
+  setMigrationReportJson: React.Dispatch<React.SetStateAction<MigrationReportType>>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -14,18 +36,18 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [uploadedFileContext, setuploadedFileContext] = useState();
-  const [ProjectJson, setProjectJson] = useState();
-  const [MigrationReportJson, setMigrationReportJson] = useState();
+  const [uploadedFileContext, setUploadedFileContext] = useState<UploadedFile[] | null>(null);
+  const [projectJson, setProjectJson] = useState<ProjectJsonType>(null);
+  const [migrationReportJson, setMigrationReportJson] = useState<MigrationReportType>(null);
 
   return (
     <AppContext.Provider
       value={{
         uploadedFileContext,
-        setuploadedFileContext,
-        ProjectJson,
+        setUploadedFileContext,
+        projectJson,
         setProjectJson,
-        MigrationReportJson,
+        migrationReportJson,
         setMigrationReportJson,
       }}
     >

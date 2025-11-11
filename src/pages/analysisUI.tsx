@@ -4,63 +4,69 @@ import { AnalysisData } from "@/lib/analysis";
 import { ArrowRight } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useAppContext } from "@/contexts/useContext";
-import APIInterceptor from "@/lib/axiosInterceptor";
 import AnalysisDetails from "@/components/AnalysisDetails";
+import { useApi } from "@/hooks/useAPI";
 export interface AnalysisPageProps {
-  ananlysisAPIData: string | AnalysisData;
+  analysisAPIData: string | AnalysisData;
 }
 
 const AnalysisPage = () => {
   const [data, setData] = useState<AnalysisData | null>(null);
   const [activeMetric, setActiveMetric] = useState(0);
   const [scrollY, setScrollY] = useState(0);
+  const { apiCall, error } = useApi();
 
   const { setProjectJson, setMigrationReportJson } = useAppContext();
 
   const location = useLocation();
 
-  const { ananlysisAPIData } = location.state || {};
+  const { analysisAPIData } = location.state || {};
 
   // API Integration For Migration Process
   const MigrationAPI = async () => {
     try {
-      // for migration Report JSON
-      const migrationReport = await APIInterceptor.post(
-        `/analyze-project`,
-        { generateMigrationReport: true },
-        { headers: { "Content-Type": "application/json" } }
-      );
-      // for migration Project ZIP
-      const response = await APIInterceptor.post(`/migration-project`, {
-        headers: { "Content-Type": "application/json" },
+      // Call for Migration Report
+      const migrationReport = await apiCall({
+        method: "post",
+        url: "/analyze-project",
+        data: { generateMigrationReport: true },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Call for Migration Project
+      const response = await apiCall({
+        method: "post",
+        url: "/migration-project",
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
 
       setMigrationReportJson(migrationReport.data.report[0]);
       setProjectJson(response.data);
-
-      // setLoading(false);
-    } catch (error) {
-      // setLoading(false);
+    } catch {
       console.log("error: ", error);
     }
   };
 
   useEffect(() => {
-    if (ananlysisAPIData) {
-      // console.log("Received analysis API data:", ananlysisAPIData);
+    if (analysisAPIData) {
+      // console.log("Received analysis API data:", analysisAPIData);
       try {
-        if (typeof ananlysisAPIData === "string") {
-          const parsed = JSON.parse(ananlysisAPIData);
+        if (typeof analysisAPIData === "string") {
+          const parsed = JSON.parse(analysisAPIData);
           setData(parsed);
         } else {
           // If it's already an object, no need to parse
-          setData(ananlysisAPIData[0]);
+          setData(analysisAPIData[0]);
         }
       } catch (error) {
         console.error("Failed to parse analysis API data:", error);
       }
     }
-  }, [ananlysisAPIData]);
+  }, [analysisAPIData]);
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);

@@ -4,6 +4,7 @@ import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router-dom";
 import APIInterceptor from "@/lib/axiosInterceptor";
+import { useApi } from "@/hooks/useAPI";
 
 const UploadProject = () => {
   const [filesContent, setFilesContent] = useState<
@@ -15,6 +16,7 @@ const UploadProject = () => {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { apiCall, error } = useApi();
 
   const navigate = useNavigate();
 
@@ -23,84 +25,90 @@ const UploadProject = () => {
     await analyzeProject(files);
   };
 
+  // API Function to analyze uploaded project
+  const analyzeProject = async (files: File[]) => {
+    if (files.length === 0) return;
 
-// API Function to analyze uploaded project 
-const analyzeProject = async (files: File[]) => {
-  if (files.length === 0) return;
+    const file = files[0];
+    const formData = new FormData();
+    formData.append("folder", file);
 
-  const file = files[0];
-  const formData = new FormData();
-  formData.append("folder", file);
+    setLoading(true);
+    try {
+      const response = await apiCall({
+        method: "post",
+        url: "/analyze-project",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-  setLoading(true);
-  try {
-    const response = await APIInterceptor.post(`/analyze-project`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+      const data = response.data;
 
-    const data = response.data;
+      navigate("/analysis", {
+        state: { analysisAPIData: data.report },
+      });
 
-    navigate("/analysis", {
-      state: { ananlysisAPIData: data.report },
-    });
+      setIsReportData(() => true);
+      setAnalysisReport(data.report || "No report generated.");
+      setConvertedCode(data.convertedCode || "");
+      toast({
+        title: "Analysis Complete!",
+        description: "Your JSP project has been successfully analyzed.",
+      });
+    } catch {
+      console.error("Error analyzing project:", error);
+      setAnalysisReport("Error during analysis. Please try again.");
+      setConvertedCode("");
+      toast({
+        variant: "destructive",
+        title: "Analysis Failed",
+        description:
+          "There was an error analyzing your project. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    setIsReportData(() => true);
-    setAnalysisReport(data.report || "No report generated.");
-    setConvertedCode(data.convertedCode || "");
-    toast({
-      title: "Analysis Complete!",
-      description: "Your JSP project has been successfully analyzed.",
-    });
-  } catch (error: any) {
-    console.error("Error analyzing project:", error);
-    setAnalysisReport("Error during analysis. Please try again.");
-    setConvertedCode("");
-    toast({
-      variant: "destructive",
-      title: "Analysis Failed",
-      description:
-        "There was an error analyzing your project. Please try again.",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
+  // API Function to analyze GitHub repo
+  const analyzeRepo = async (repoUrl: string) => {
+    setLoading(true);
+    try {
+      const response = await apiCall({
+        method: "post",
+        url: "/analyze-project",
+        data: { repoUrl },
+      });
 
+      const data = response.data;
 
-// API Function to analyze GitHub repo
-const analyzeRepo = async (repoUrl: string) => {
-  setLoading(true);
-  try {
-    const response = await APIInterceptor.post(`/analyze-project`, { repoUrl });
+      navigate("/analysis", {
+        state: { analysisAPIData: data.report },
+      });
 
-    const data = response.data;
+      setAnalysisReport(data.report || "No report generated.");
+      setConvertedCode(data.convertedCode || "");
+      setIsReportData(true);
 
-    navigate("/analysis", {
-      state: { ananlysisAPIData: data.report },
-    });
-
-    setAnalysisReport(data.report || "No report generated.");
-    setConvertedCode(data.convertedCode || "");
-    setIsReportData(true);
-
-    toast({
-      title: "Analysis Complete!",
-      description: "Your JSP project has been successfully analyzed.",
-    });
-  } catch (error: any) {
-    console.error("Error analyzing repo:", error);
-    toast({
-      variant: "destructive",
-      title: "Repo Analysis Failed",
-      description: error.response?.data?.message || "Could not analyze the repository. Please try again.",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-
+      toast({
+        title: "Analysis Complete!",
+        description: "Your JSP project has been successfully analyzed.",
+      });
+    } catch (error: any) {
+      console.error("Error analyzing repo:", error);
+      toast({
+        variant: "destructive",
+        title: "Repo Analysis Failed",
+        description:
+          error.response?.data?.message ||
+          "Could not analyze the repository. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen container mx-auto pb-12">
@@ -113,7 +121,7 @@ const analyzeRepo = async (repoUrl: string) => {
           uploadedFiles={filesContent}
           isLoading={loading}
           isReportData={isReportData}
-          ananlysisAPIData={convertedCode}
+          analysisAPIData={convertedCode}
         />
 
         {/* Success Message */}

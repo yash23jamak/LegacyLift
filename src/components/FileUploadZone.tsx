@@ -15,7 +15,7 @@ interface FileUploadZoneProps {
   uploadedFiles: Array<{ name: string; content: string }>;
   isLoading: boolean;
   isReportData?: boolean;
-  ananlysisAPIData?: AnalysisPageProps;
+  analysisAPIData?: AnalysisPageProps;
 }
 
 export const FileUploadZone = ({
@@ -24,7 +24,7 @@ export const FileUploadZone = ({
   uploadedFiles,
   isLoading,
   isReportData = false,
-  ananlysisAPIData,
+  analysisAPIData,
 }: FileUploadZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const [githubUrl, setGithubUrl] = useState("");
@@ -123,7 +123,7 @@ export const FileUploadZone = ({
       {isLoading ? (
         <ProgressBar
           isReportData={isReportData}
-          ananlysisAPIData={ananlysisAPIData}
+          analysisAPIData={analysisAPIData}
         />
       ) : (
         <Card className="overflow-hidden">
