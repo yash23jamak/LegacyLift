@@ -1,5 +1,3 @@
-
-
 import { useEffect, useState } from 'react';
 import {
   ArrowRight,
@@ -35,7 +33,7 @@ interface TechStackItem {
   type: 'legacy' | 'modern';
 }
 
-function migrationUI() {
+function MigrationUI() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'name' | 'complexity'>('name');
 
@@ -178,7 +176,7 @@ function migrationUI() {
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
@@ -199,7 +197,7 @@ function migrationUI() {
           </p>
         </header>
 
-         <div className="h-[90vh] w-full p-4">
+        <div className="h-[90vh] w-full p-4">
           <FileExplorer files={dummyProjectJson} />
         </div>
 
@@ -430,7 +428,7 @@ function migrationUI() {
                 <CheckCircle2 className="w-6 h-6" />
 
               </div> */}
-                <h3 className="text-2xl font-bold mb-2">Migration Complete Download ZIP</h3>
+              <h3 className="text-2xl font-bold mb-2">Migration Complete Download ZIP</h3>
               <button className="w-full sm:w-auto bg-transparent text-white px-8 py-4 rounded-xl border-2 border-white hover:bg-white hover:text-blue-600 transition-all font-semibold text-lg">
                 Download ZIP
               </button>
@@ -446,4 +444,4 @@ function migrationUI() {
   );
 }
 
-export default migrationUI;
+export default MigrationUI;

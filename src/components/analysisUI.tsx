@@ -7,10 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { mockAnalysisData } from "@/lib/mockdata";
 import { AnalysisData } from "@/lib/analysis";
 import {
   AlertCircle,
@@ -26,7 +24,6 @@ import {
   AlertTriangle,
   Target,
   Clock,
-  Award,
   FileCode,
   Settings,
   XCircle,
@@ -54,13 +51,11 @@ const AnalysisPage = () => {
 
   useEffect(() => {
     if (ananlysisAPIData) {
-      // console.log("Received analysis API data:", ananlysisAPIData);
       try {
         if (typeof ananlysisAPIData === "string") {
           const parsed = JSON.parse(ananlysisAPIData);
           setData(parsed);
         } else {
-          // If it's already an object, no need to parse
           setData(ananlysisAPIData);
         }
       } catch (error) {
@@ -97,26 +92,21 @@ const AnalysisPage = () => {
     return "from-rose-400 to-pink-500";
   };
 
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-cyan-600 mx-auto"></div>
+          <p className="mt-4 text-xl text-gray-600">Loading analysis data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
       {/* Floating Orbs Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* <div
-          className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-cyan-300/30 to-blue-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.2}px)` }}
-        />
-        <div
-          className="absolute top-1/4 right-0 w-80 h-80 bg-gradient-to-br from-pink-300/30 to-rose-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
-        />
-        <div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-br from-yellow-300/30 to-amber-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * -0.1}px)` }}
-        />
-        <div
-          className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-300/20 to-indigo-400/20 rounded-full blur-2xl"
-          style={{ transform: `translateY(${scrollY * 0.25}px)` }}
-        /> */}
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-16 space-y-16">
@@ -198,11 +188,10 @@ const AnalysisPage = () => {
                   return (
                     <div
                       key={idx}
-                      className={`absolute inset-0 transition-all duration-700 ${
-                        isActive
-                          ? "opacity-100 scale-100 rotate-0"
-                          : "opacity-0 scale-90 rotate-12"
-                      }`}
+                      className={`absolute inset-0 transition-all duration-700 ${isActive
+                        ? "opacity-100 scale-100 rotate-0"
+                        : "opacity-0 scale-90 rotate-12"
+                        }`}
                     >
                       <Card
                         className={`h-full bg-gradient-to-br ${metric.bg} border-2 border-white shadow-2xl hover:shadow-3xl transition-all duration-500`}
@@ -593,9 +582,8 @@ const AnalysisPage = () => {
                     stroke="url(#gradient)"
                     strokeWidth="12"
                     fill="none"
-                    strokeDasharray={`${
-                      (data?.analysis?.complexity_score / 100) * 553
-                    } 553`}
+                    strokeDasharray={`${(data?.analysis?.complexity_score / 100) * 553
+                      } 553`}
                     className="transition-all duration-1000"
                     strokeLinecap="round"
                   />
@@ -633,8 +621,8 @@ const AnalysisPage = () => {
                   {data?.analysis?.complexity_score <= 3
                     ? "Low complexity"
                     : data?.analysis?.complexity_score <= 6
-                    ? "Medium complexity"
-                    : "High complexity"}
+                      ? "Medium complexity"
+                      : "High complexity"}
                 </p>
               </div>
             </CardContent>
@@ -705,7 +693,7 @@ const AnalysisPage = () => {
                       key={idx}
                       className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-gray-700"
                     >
-                      {detail}
+                      {String(detail)}
                     </div>
                   ))}
                 </div>
@@ -742,11 +730,10 @@ const AnalysisPage = () => {
                             v{dep.version}
                           </Badge>
                           <Badge
-                            className={`${
-                              dep.status === "outdated"
-                                ? "bg-gradient-to-r from-orange-500 to-amber-500"
-                                : "bg-gradient-to-r from-emerald-500 to-teal-500"
-                            } text-white border-0 shadow-md`}
+                            className={`${dep.status === "outdated"
+                              ? "bg-gradient-to-r from-orange-500 to-amber-500"
+                              : "bg-gradient-to-r from-emerald-500 to-teal-500"
+                              } text-white border-0 shadow-md`}
                           >
                             {dep.status}
                           </Badge>
@@ -787,7 +774,7 @@ const AnalysisPage = () => {
                   Migration Strategy
                 </CardTitle>
                 <CardDescription className="text-lg mt-2">
-                  Recommended path to {data?.migration?.recommended_framework}
+                  Recommended path to {data?.migration?.recommended_framework || 'React'}
                 </CardDescription>
               </div>
               <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-xl">
@@ -878,26 +865,6 @@ const AnalysisPage = () => {
                 )}
               </CardContent>
             </Card>
-
-            {/* Previous Code */}
-            {/* <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
-              <h3 className="text-xl font-black text-purple-700 mb-4 flex items-center gap-2">
-                <Zap className="w-6 h-6" />
-                Suggested Tools & Technologies
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {data?.migration?.suggested_tools.map((tool, idx) => (
-                  <Badge
-                    key={idx}
-                    className="px-4 py-2 text-base bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                  >
-                    {tool}
-                  </Badge>
-                ))}
-              </div>
-            </div> */}
-
-            {/* Latest Code */}
             <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200">
               <h3 className="text-xl font-black text-purple-700 mb-4 flex items-center gap-2">
                 <Zap className="w-6 h-6" />
@@ -916,101 +883,6 @@ const AnalysisPage = () => {
             </div>
           </CardContent>
         </Card>
-
-        {/* Migration Phases */}
-        <div className="space-y-6">
-          <div className="text-center space-y-4">
-            <h2 className="text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent pb-2">
-              Migration Phases
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Step-by-step roadmap to successfully migrate your legacy codebase
-            </p>
-          </div>
-
-          <div className="space-y-0">
-            {data?.migration?.phases &&
-              data?.migration?.phases.map((phase, idx) => (
-                <div key={idx}>
-                  <Card className="group bg-white/80 backdrop-blur-xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
-                    <CardContent className="relative p-8">
-                      <div className="flex items-start gap-6">
-                        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                          <span className="text-4xl font-black text-gray-700">
-                            {idx + 1}
-                          </span>
-                        </div>
-
-                        <div className="flex-1 space-y-4">
-                          <div className="flex items-start justify-between">
-                            <div>
-                              <h3 className="text-3xl font-black text-gray-800 mb-2">
-                                {phase.name}
-                              </h3>
-                              <p className="text-gray-600 text-lg">
-                                {phase.description}
-                              </p>
-                            </div>
-                            <Badge className="px-4 py-2 text-base bg-gradient-to-r from-pink-100 to-pink-200 text-gray-700 border border-pink-200 shadow-md whitespace-nowrap hover:bg-gradient-to-r hover:from-pink-200 hover:to-pink-300 transition-all">
-                              <Clock className="w-4 h-4 mr-2" />
-                              {phase.estimated_time_weeks} weeks
-                            </Badge>
-                          </div>
-
-                          <div className="grid md:grid-cols-2 gap-4 pt-2">
-                            <div>
-                              <p className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-2">
-                                <Target className="w-4 h-4" />
-                                Deliverables
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {phase.deliverables.map((deliverable, dIdx) => (
-                                  <Badge
-                                    key={dIdx}
-                                    className="px-3 py-1.5 !bg-transparent !hover:bg-transparent border-blue-500 text-blue-700 hover:shadow-md transition-all"
-                                  >
-                                    {deliverable}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                            <div>
-                              <p className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-2">
-                                <Zap className="w-4 h-4" />
-                                Tools Used
-                              </p>
-                              <div className="flex flex-wrap gap-2">
-                                {phase.tools_used.map((tool, tIdx) => (
-                                  <Badge
-                                    key={tIdx}
-                                    className="px-3 py-1.5 !bg-transparent !hover:bg-transparent border-emerald-500 text-emerald-700 hover:shadow-md transition-all"
-                                  >
-                                    {tool}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                  {idx < data?.migration?.phases.length - 1 && (
-                    <div className="flex justify-center -my-3 relative z-10">
-                      <div className="flex flex-col items-center">
-                        <div className="w-1 h-6 bg-gradient-to-b from-purple-400 to-purple-300"></div>
-                        <div className="p-2.5 rounded-full bg-white border-4 border-purple-400 shadow-xl">
-                          <ArrowDown className="w-5 h-5 text-purple-600" />
-                        </div>
-                        <div className="w-1 h-6 bg-gradient-to-b from-purple-300 to-purple-400"></div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-          </div>
-        </div>
 
         {/* AI Tools Analysis */}
         <div className="space-y-8">
@@ -1206,6 +1078,101 @@ const AnalysisPage = () => {
           </div>
         </div>
 
+        {/* Migration Phases */}
+        <div className="space-y-6">
+          <div className="text-center space-y-4">
+            <h2 className="text-5xl font-black bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent pb-2">
+              Migration Phases
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Step-by-step roadmap to successfully migrate your legacy codebase
+            </p>
+          </div>
+
+          <div className="space-y-0">
+            {data?.migration?.phases &&
+              data?.migration?.phases.map((phase, idx) => (
+                <div key={idx}>
+                  <Card className="group bg-white/80 backdrop-blur-xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20 overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 to-pink-500/5 translate-x-full group-hover:translate-x-0 transition-transform duration-700" />
+                    <CardContent className="relative p-8">
+                      <div className="flex items-start gap-6">
+                        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-purple-200 to-pink-200 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                          <span className="text-4xl font-black text-gray-700">
+                            {idx + 1}
+                          </span>
+                        </div>
+
+                        <div className="flex-1 space-y-4">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="text-3xl font-black text-gray-800 mb-2">
+                                {phase.name}
+                              </h3>
+                              <p className="text-gray-600 text-lg">
+                                {phase.description}
+                              </p>
+                            </div>
+                            <Badge className="px-4 py-2 text-base bg-gradient-to-r from-pink-100 to-pink-200 text-gray-700 border border-pink-200 shadow-md whitespace-nowrap hover:bg-gradient-to-r hover:from-pink-200 hover:to-pink-300 transition-all">
+                              <Clock className="w-4 h-4 mr-2" />
+                              {phase.estimated_time_weeks} weeks
+                            </Badge>
+                          </div>
+
+                          <div className="grid md:grid-cols-2 gap-4 pt-2">
+                            <div>
+                              <p className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-2">
+                                <Target className="w-4 h-4" />
+                                Deliverables
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {phase.deliverables.map((deliverable, dIdx) => (
+                                  <Badge
+                                    key={dIdx}
+                                    className="px-3 py-1.5 !bg-transparent !hover:bg-transparent border-blue-500 text-blue-700 hover:shadow-md transition-all"
+                                  >
+                                    {deliverable}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <p className="text-sm font-bold text-gray-500 mb-2 flex items-center gap-2">
+                                <Zap className="w-4 h-4" />
+                                Tools Used
+                              </p>
+                              <div className="flex flex-wrap gap-2">
+                                {phase.tools_used.map((tool, tIdx) => (
+                                  <Badge
+                                    key={tIdx}
+                                    className="px-3 py-1.5 !bg-transparent !hover:bg-transparent border-emerald-500 text-emerald-700 hover:shadow-md transition-all"
+                                  >
+                                    {tool}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  {idx < data?.migration?.phases.length - 1 && (
+                    <div className="flex justify-center -my-3 relative z-10">
+                      <div className="flex flex-col items-center">
+                        <div className="w-1 h-6 bg-gradient-to-b from-purple-400 to-purple-300"></div>
+                        <div className="p-2.5 rounded-full bg-white border-4 border-purple-400 shadow-xl">
+                          <ArrowDown className="w-5 h-5 text-purple-600" />
+                        </div>
+                        <div className="w-1 h-6 bg-gradient-to-b from-purple-300 to-purple-400"></div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+          </div>
+        </div>
+
         {/* Migration Process */}
         <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-12 sm:p-16 text-center flex justify-between shadow-2xl">
           <div className="flex   items-center">
@@ -1222,64 +1189,7 @@ const AnalysisPage = () => {
             </Link>
           </div>
         </div>
-
-        {/* CTA Section */}
-        {/* <Card className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 border-0 shadow-2xl overflow-hidden">
-          <div className="absolute  bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20" />
-          <CardContent className="relative p-12 text-center space-y-6">
-            <Rocket className="w-20 h-20 text-white mx-auto animate-bounce" />
-            <h3 className="text-5xl font-black text-white">
-              Ready to Transform?
-            </h3>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Start your migration journey today with AI-powered analysis and
-              expert guidance
-            </p>
-            <button className="group px-8 py-4 bg-white text-purple-600 rounded-2xl font-black text-lg shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 flex items-center gap-3 mx-auto">
-              Get Started Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-            </button>
-          </CardContent>
-        </Card> */}
       </div>
-
-      {/* Custom Scrollbar */}
-      <style>{`
-        ::-webkit-scrollbar {
-          width: 12px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: linear-gradient(to bottom, #e0f2fe, #ddd6fe);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #06b6d4, #8b5cf6);
-          border-radius: 6px;
-          border: 2px solid #e0f2fe;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #0891b2, #7c3aed);
-        }
-
-        * {
-          scrollbar-width: thin;
-          scrollbar-color: #06b6d4 #e0f2fe;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-      `}</style>
     </div>
   );
 };
