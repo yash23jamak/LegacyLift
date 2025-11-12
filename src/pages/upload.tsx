@@ -43,7 +43,7 @@ const UploadProject = () => {
         },
       });
 
-      setFilesList(response?.data?.files || []);
+      setFilesList(response?.data?.report || []);
       const data = response.data;
 
       setIsReportData(() => true);

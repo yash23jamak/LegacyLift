@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Card,
   CardContent,
@@ -21,7 +20,6 @@ import {
   Brain,
   AlertTriangle,
   Clock,
-  Award,
   FileCode,
   Settings,
   XCircle,
@@ -35,7 +33,6 @@ import {
   Activity,
   Search,
   Network,
-  ArrowRight,
   Target,
 } from "lucide-react";
 import { Badge } from "./ui/badge";

@@ -1,4 +1,3 @@
-import React from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";

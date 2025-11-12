@@ -18,7 +18,6 @@ import { Input } from "./ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { useApi } from "@/hooks/useAPI";
 import JSZip from "jszip";
-import { saveAs } from "file-saver";
 import { useNavigate } from "react-router-dom";
 
 interface FileUploadZoneProps {
