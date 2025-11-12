@@ -10,8 +10,8 @@ import { loginSchema } from "@/lib/validation";
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
 
     const navigate = useNavigate();
