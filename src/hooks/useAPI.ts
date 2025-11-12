@@ -14,6 +14,7 @@ export function useApi<T = any, R = AxiosResponse<T>>() {
       setError(null);
       try {
         const response = await APIInterceptor.request<T, R>(config);
+        console.log('response: ', response);
         return response;
       } catch (err) {
         setError(err as Error);

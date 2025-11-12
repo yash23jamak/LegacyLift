@@ -14,6 +14,7 @@ const UploadProject = () => {
   const [isReportData, setIsReportData] = useState(false);
   const [analysisReport, setAnalysisReport] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [filesList, setFilesList] = useState<File[]>([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { apiCall, error } = useApi();
@@ -30,6 +31,7 @@ const UploadProject = () => {
     if (files.length === 0) return;
 
     const file = files[0];
+    console.log('file: ', file);
     const formData = new FormData();
     formData.append("folder", file);
 
@@ -44,11 +46,12 @@ const UploadProject = () => {
         },
       });
 
+      setFilesList(response?.data?.report || []);
       const data = response.data;
 
-      navigate("/analysis", {
-        state: { analysisAPIData: data.report },
-      });
+      // navigate("/analysis", {
+      //   state: { analysisAPIData: data.report },
+      // });
 
       setIsReportData(() => true);
       setAnalysisReport(data.report || "No report generated.");
@@ -84,9 +87,9 @@ const UploadProject = () => {
 
       const data = response.data;
 
-      navigate("/analysis", {
-        state: { analysisAPIData: data.report },
-      });
+      // navigate("/analysis", {
+      //   state: { analysisAPIData: data.report },
+      // });
 
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");
@@ -122,6 +125,7 @@ const UploadProject = () => {
           isLoading={loading}
           isReportData={isReportData}
           analysisAPIData={convertedCode}
+          filesList={filesList}
         />
 
         {/* Success Message */}
