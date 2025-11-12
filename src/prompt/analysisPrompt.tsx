@@ -1,4 +1,3 @@
-
 // File Upload and Analysis Prompt for JSP to React Migration
 export const ANALYSIS_PROMPT = `You are a senior React developer and software architect tasked with analyzing a legacy JSP project. Your goal is to perform a comprehensive review of the provided frontend project files and return a detailed, structured JSON object containing the analysis results and a roadmap for migrating the project to ReactJS
 IMPORTANT INSTRUCTIONS:
@@ -112,7 +111,9 @@ Base your analysis only on the following project files. Do not invent content. E
  `;
 
 // GitHub Repository Analysis Prompt for JSP to React Migration
-export const REPO_ANALYSIS_PROMPT = (repo_url: any) => `You are an expert frontend migration specialist analyzing legacy JSP code for conversion to modern React. Analyze ONLY the provided frontend code of repo (.jsp, .jspx, .jspf, .html, .css, .js, .xml, .properties) and generate a comprehensive analysis report in valid JSON format.
+export const REPO_ANALYSIS_PROMPT = (
+  repo_url: any,
+) => `You are an expert frontend migration specialist analyzing legacy JSP code for conversion to modern React. Analyze ONLY the provided frontend code of repo (.jsp, .jspx, .jspf, .html, .css, .js, .xml, .properties) and generate a comprehensive analysis report in valid JSON format.
  
  
 STRICT REQUIREMENTS:
@@ -233,8 +234,7 @@ Generate the analysis report using this exact JSON structure:
  
 Analyze the provided code of Repo and generate the report. Base all findings strictly on the actual code content. Do not invent or assume features that are not present in the Repo.
  
-${repo_url}`
-
+${repo_url}`;
 
 export const MIGRATION_PROMPT = `
 You are an expert full-stack engineer responsible for migrating a legacy JSP (Java Server Pages) application into a fully modern, client-side React project.

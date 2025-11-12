@@ -1,7 +1,13 @@
-import { useState } from 'react';
-import { Code2, Copy, Download, CheckCircle2 } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { Code2, Copy, Download, CheckCircle2 } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface ConvertedCodeProps {
   code: string;

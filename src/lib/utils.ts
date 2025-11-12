@@ -15,10 +15,9 @@ export const ALLOWED_EXTENSIONS = [
   ".css",
   ".js",
   ".xml",
-  ".properties"
+  ".properties",
 ];
 
 export const hasAllowedExtension = (filename: string): boolean => {
-  return ALLOWED_EXTENSIONS.some(ext => filename.toLowerCase().endsWith(ext));
+  return ALLOWED_EXTENSIONS.some((ext) => filename.toLowerCase().endsWith(ext));
 };
-
