@@ -1,31 +1,10 @@
-import { Box, Layers, RefreshCw, ScanSearch, Wrench, Zap } from 'lucide-react';
+import { ScanSearch, Wrench, Zap } from 'lucide-react';
 import React from 'react'
 import { FileExplorer } from './FileExplorer';
 import { ProjectFile } from '@/type/fileExplorerType';
+import { modernCapabilities } from '@/lib/mockdata';
 
-const modernCapabilities = [
-  {
-    icon: Box,
-    title: "Component Reuse",
-    description: "Build once, use everywhere with props-based customization",
-  },
-  {
-    icon: RefreshCw,
-    title: "React Hooks",
-    description:
-      "useState, useEffect, useContext for powerful state management",
-  },
-  {
-    icon: Layers,
-    title: "State Management",
-    description: "Context API, Redux, Zustand for complex application state",
-  },
-  {
-    icon: Zap,
-    title: "Client-Side Routing",
-    description: "Fast navigation without page reloads using React Router",
-  },
-];
+
 
 const MigrationAnalysis: React.FC<{ProjectJson: ProjectFile[] | null}> = ({ProjectJson}) => {
   return (
