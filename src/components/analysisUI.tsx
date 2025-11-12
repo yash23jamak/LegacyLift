@@ -7,10 +7,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
-import { mockAnalysisData } from "@/lib/mockdata";
 import { AnalysisData } from "@/lib/analysis";
 import {
   AlertCircle,
@@ -26,7 +24,6 @@ import {
   AlertTriangle,
   Target,
   Clock,
-  Award,
   FileCode,
   Settings,
   XCircle,
@@ -54,13 +51,11 @@ const AnalysisPage = () => {
 
   useEffect(() => {
     if (ananlysisAPIData) {
-      // console.log("Received analysis API data:", ananlysisAPIData);
       try {
         if (typeof ananlysisAPIData === "string") {
           const parsed = JSON.parse(ananlysisAPIData);
           setData(parsed);
         } else {
-          // If it's already an object, no need to parse
           setData(ananlysisAPIData);
         }
       } catch (error) {
@@ -97,27 +92,21 @@ const AnalysisPage = () => {
     return "from-rose-400 to-pink-500";
   };
 
+  if (!data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-cyan-600 mx-auto"></div>
+          <p className="mt-4 text-xl text-gray-600">Loading analysis data...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
       {/* Floating Orbs Background */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        {/* <div
-          className="absolute -top-40 -left-40 w-96 h-96 bg-gradient-to-br from-cyan-300/30 to-blue-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.2}px)` }}
-        />
-        <div
-          className="absolute top-1/4 right-0 w-80 h-80 bg-gradient-to-br from-pink-300/30 to-rose-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * 0.15}px)` }}
-        />
-        <div
-          className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-br from-yellow-300/30 to-amber-400/30 rounded-full blur-3xl"
-          style={{ transform: `translateY(${scrollY * -0.1}px)` }}
-        />
-        <div
-          className="absolute top-1/2 left-1/4 w-64 h-64 bg-gradient-to-br from-purple-300/20 to-indigo-400/20 rounded-full blur-2xl"
-          style={{ transform: `translateY(${scrollY * 0.25}px)` }}
-        /> */}
-      </div>
+      <div className="fixed inset-0 overflow-hidden pointer-events-none"></div>
 
       <div className="relative z-10 container mx-auto px-4 py-16 space-y-16">
         {/* Hero Section */}
@@ -310,7 +299,7 @@ const AnalysisPage = () => {
                             {issue}
                           </span>
                         </div>
-                      )
+                      ),
                     )}
                   </div>
 
@@ -330,7 +319,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -383,7 +372,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -434,7 +423,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -487,7 +476,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -561,7 +550,7 @@ const AnalysisPage = () => {
                           >
                             {example}
                           </Badge>
-                        )
+                        ),
                       )}
                     </div>
                   </div>
@@ -616,7 +605,7 @@ const AnalysisPage = () => {
                   <div className="text-center">
                     <div
                       className={`text-6xl font-black bg-gradient-to-br ${getComplexityColor(
-                        data?.analysis?.complexity_score
+                        data?.analysis?.complexity_score,
                       )} bg-clip-text text-transparent`}
                     >
                       {data?.analysis?.complexity_score}
@@ -633,8 +622,8 @@ const AnalysisPage = () => {
                   {data?.analysis?.complexity_score <= 3
                     ? "Low complexity"
                     : data?.analysis?.complexity_score <= 6
-                    ? "Medium complexity"
-                    : "High complexity"}
+                      ? "Medium complexity"
+                      : "High complexity"}
                 </p>
               </div>
             </CardContent>
@@ -684,7 +673,7 @@ const AnalysisPage = () => {
               <div className="text-center p-6 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200">
                 <div
                   className={`text-5xl font-black bg-gradient-to-br ${getRiskColor(
-                    data?.vulnerabilities?.risk_level
+                    data?.vulnerabilities?.risk_level,
                   )} bg-clip-text text-transparent mb-2`}
                 >
                   {data?.vulnerabilities?.count}
@@ -692,7 +681,7 @@ const AnalysisPage = () => {
                 <p className="text-sm text-gray-600">Vulnerabilities Found</p>
                 <Badge
                   className={`mt-3 px-4 py-1.5 bg-gradient-to-r ${getRiskColor(
-                    data?.vulnerabilities?.risk_level
+                    data?.vulnerabilities?.risk_level,
                   )} text-white border-0`}
                 >
                   {data?.vulnerabilities?.risk_level} Risk
@@ -705,7 +694,7 @@ const AnalysisPage = () => {
                       key={idx}
                       className="p-3 rounded-lg bg-red-50 border border-red-200 text-sm text-gray-700"
                     >
-                      {detail}
+                      {String(detail)}
                     </div>
                   ))}
                 </div>
@@ -787,7 +776,8 @@ const AnalysisPage = () => {
                   Migration Strategy
                 </CardTitle>
                 <CardDescription className="text-lg mt-2">
-                  Recommended path to {data?.migration?.recommended_framework}
+                  Recommended path to{" "}
+                  {data?.migration?.recommended_framework || "React"}
                 </CardDescription>
               </div>
               <div className="p-4 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-500 shadow-xl">
@@ -874,30 +864,10 @@ const AnalysisPage = () => {
                         {consideration}
                       </span>
                     </div>
-                  )
+                  ),
                 )}
               </CardContent>
             </Card>
-
-            {/* Previous Code */}
-            {/* <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-pink-50 border-2 border-purple-200">
-              <h3 className="text-xl font-black text-purple-700 mb-4 flex items-center gap-2">
-                <Zap className="w-6 h-6" />
-                Suggested Tools & Technologies
-              </h3>
-              <div className="flex flex-wrap gap-3">
-                {data?.migration?.suggested_tools.map((tool, idx) => (
-                  <Badge
-                    key={idx}
-                    className="px-4 py-2 text-base bg-gradient-to-r from-purple-500 to-pink-500 text-white border-0 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                  >
-                    {tool}
-                  </Badge>
-                ))}
-              </div>
-            </div> */}
-
-            {/* Latest Code */}
             <div className="p-6 rounded-2xl bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200">
               <h3 className="text-xl font-black text-purple-700 mb-4 flex items-center gap-2">
                 <Zap className="w-6 h-6" />
@@ -916,6 +886,200 @@ const AnalysisPage = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* AI Tools Analysis */}
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-2 border-cyan-500/20">
+              <Brain className="w-5 h-5 text-cyan-600 animate-pulse" />
+              <span className="text-sm font-bold text-cyan-600">
+                AI-Powered Analysis
+              </span>
+            </div>
+            <h2 className="text-5xl font-black bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent pb-2">
+              Analysis Engine
+            </h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Advanced AI tools used to analyze and evaluate your legacy
+              codebase
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Legacy Analysis */}
+            <Card className="group bg-gradient-to-br from-cyan-50 to-blue-50 border-2 border-cyan-200 hover:border-cyan-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <Search className="w-8 h-8 text-white" />
+                  </div>
+                  <Badge className="bg-cyan-100 text-cyan-700 border-2 border-cyan-300">
+                    AI Tool
+                  </Badge>
+                </div>
+                <h3 className="text-2xl font-black text-gray-800">
+                  Legacy Analysis
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-white border-2 border-cyan-200">
+                    <p className="text-sm font-bold text-gray-500 mb-2">
+                      Method
+                    </p>
+                    <p className="text-gray-700">
+                      {data?.ai_tools?.legacy_analysis.method}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-yellow-500" />
+                      Key Findings
+                    </p>
+                    {data?.ai_tools?.legacy_analysis.findings.map(
+                      (finding, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-2 p-3 rounded-lg bg-white border border-cyan-200"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-cyan-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm text-gray-700">
+                            {finding}
+                          </span>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Dependency Mapping */}
+            <Card className="group bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <Network className="w-8 h-8 text-white" />
+                  </div>
+                  <Badge className="bg-purple-100 text-purple-700 border-2 border-purple-300">
+                    AI Tool
+                  </Badge>
+                </div>
+                <h3 className="text-2xl font-black text-gray-800">
+                  Dependency Mapping
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-white border-2 border-purple-200">
+                    <p className="text-sm font-bold text-gray-500 mb-2">
+                      Method
+                    </p>
+                    <p className="text-gray-700">
+                      {data?.ai_tools?.dependency_mapping.method}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-yellow-500" />
+                      Key Findings
+                    </p>
+                    {data?.ai_tools?.dependency_mapping.findings.map(
+                      (finding, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-2 p-3 rounded-lg bg-white border border-purple-200"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm text-gray-700">
+                            {finding}
+                          </span>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Complexity Scoring */}
+            <Card className="group bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200 hover:border-yellow-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <Badge className="bg-yellow-100 text-yellow-700 border-2 border-yellow-300">
+                    AI Tool
+                  </Badge>
+                </div>
+                <h3 className="text-2xl font-black text-gray-800">
+                  Complexity Scoring
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-white border-2 border-yellow-200">
+                    <p className="text-sm font-bold text-gray-500 mb-2">
+                      Method
+                    </p>
+                    <p className="text-gray-700">
+                      {data?.ai_tools?.complexity_scoring.method}
+                    </p>
+                  </div>
+                  <div className="p-4 rounded-xl bg-white border-2 border-yellow-200">
+                    <p className="text-sm font-bold text-gray-500 mb-2">
+                      Rationale
+                    </p>
+                    <p className="text-gray-700">
+                      {data?.ai_tools?.complexity_scoring.rationale}
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Anti-Pattern Detection */}
+            <Card className="group bg-gradient-to-br from-rose-50 to-pink-50 border-2 border-rose-200 hover:border-rose-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
+              <CardContent className="p-6 space-y-4">
+                <div className="flex items-start justify-between">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <AlertTriangle className="w-8 h-8 text-white" />
+                  </div>
+                  <Badge className="bg-rose-100 text-rose-700 border-2 border-rose-300">
+                    AI Tool
+                  </Badge>
+                </div>
+                <h3 className="text-2xl font-black text-gray-800">
+                  Anti-Pattern Detection
+                </h3>
+                <div className="space-y-3">
+                  <div className="p-4 rounded-xl bg-white border-2 border-rose-200">
+                    <p className="text-sm font-bold text-gray-500 mb-2">
+                      Method
+                    </p>
+                    <p className="text-gray-700">
+                      {data?.ai_tools?.anti_pattern_detection.method}
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-rose-500" />
+                      Patterns Found
+                    </p>
+                    {data?.ai_tools?.anti_pattern_detection.patterns_found.map(
+                      (pattern, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-start gap-2 p-3 rounded-lg bg-white border border-rose-200"
+                        >
+                          <XCircle className="w-4 h-4 text-rose-500 mt-0.5 flex-shrink-0" />
+                          <span className="text-sm text-gray-700">
+                            {pattern}
+                          </span>
+                        </div>
+                      ),
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
 
         {/* Migration Phases */}
         <div className="space-y-6">
@@ -1012,200 +1176,6 @@ const AnalysisPage = () => {
           </div>
         </div>
 
-        {/* AI Tools Analysis */}
-        <div className="space-y-8">
-          <div className="text-center space-y-4">
-            <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500/10 to-blue-500/10 border-2 border-cyan-500/20">
-              <Brain className="w-5 h-5 text-cyan-600 animate-pulse" />
-              <span className="text-sm font-bold text-cyan-600">
-                AI-Powered Analysis
-              </span>
-            </div>
-            <h2 className="text-5xl font-black bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent pb-2">
-              Analysis Engine
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Advanced AI tools used to analyze and evaluate your legacy
-              codebase
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Legacy Analysis */}
-            <Card className="group bg-gradient-to-br from-cyan-50 to-blue-50 border-2 border-cyan-200 hover:border-cyan-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                    <Search className="w-8 h-8 text-white" />
-                  </div>
-                  <Badge className="bg-cyan-100 text-cyan-700 border-2 border-cyan-300">
-                    AI Tool
-                  </Badge>
-                </div>
-                <h3 className="text-2xl font-black text-gray-800">
-                  Legacy Analysis
-                </h3>
-                <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-white border-2 border-cyan-200">
-                    <p className="text-sm font-bold text-gray-500 mb-2">
-                      Method
-                    </p>
-                    <p className="text-gray-700">
-                      {data?.ai_tools?.legacy_analysis.method}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-yellow-500" />
-                      Key Findings
-                    </p>
-                    {data?.ai_tools?.legacy_analysis.findings.map(
-                      (finding, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-start gap-2 p-3 rounded-lg bg-white border border-cyan-200"
-                        >
-                          <CheckCircle2 className="w-4 h-4 text-cyan-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-700">
-                            {finding}
-                          </span>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Dependency Mapping */}
-            <Card className="group bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200 hover:border-purple-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                    <Network className="w-8 h-8 text-white" />
-                  </div>
-                  <Badge className="bg-purple-100 text-purple-700 border-2 border-purple-300">
-                    AI Tool
-                  </Badge>
-                </div>
-                <h3 className="text-2xl font-black text-gray-800">
-                  Dependency Mapping
-                </h3>
-                <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-white border-2 border-purple-200">
-                    <p className="text-sm font-bold text-gray-500 mb-2">
-                      Method
-                    </p>
-                    <p className="text-gray-700">
-                      {data?.ai_tools?.dependency_mapping.method}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-yellow-500" />
-                      Key Findings
-                    </p>
-                    {data?.ai_tools?.dependency_mapping.findings.map(
-                      (finding, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-start gap-2 p-3 rounded-lg bg-white border border-purple-200"
-                        >
-                          <CheckCircle2 className="w-4 h-4 text-purple-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-700">
-                            {finding}
-                          </span>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Complexity Scoring */}
-            <Card className="group bg-gradient-to-br from-yellow-50 to-orange-50 border-2 border-yellow-200 hover:border-yellow-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                    <TrendingUp className="w-8 h-8 text-white" />
-                  </div>
-                  <Badge className="bg-yellow-100 text-yellow-700 border-2 border-yellow-300">
-                    AI Tool
-                  </Badge>
-                </div>
-                <h3 className="text-2xl font-black text-gray-800">
-                  Complexity Scoring
-                </h3>
-                <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-white border-2 border-yellow-200">
-                    <p className="text-sm font-bold text-gray-500 mb-2">
-                      Method
-                    </p>
-                    <p className="text-gray-700">
-                      {data?.ai_tools?.complexity_scoring.method}
-                    </p>
-                  </div>
-                  <div className="p-4 rounded-xl bg-white border-2 border-yellow-200">
-                    <p className="text-sm font-bold text-gray-500 mb-2">
-                      Rationale
-                    </p>
-                    <p className="text-gray-700">
-                      {data?.ai_tools?.complexity_scoring.rationale}
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Anti-Pattern Detection */}
-            <Card className="group bg-gradient-to-br from-rose-50 to-pink-50 border-2 border-rose-200 hover:border-rose-400 transition-all duration-500 hover:shadow-2xl hover:-translate-y-2">
-              <CardContent className="p-6 space-y-4">
-                <div className="flex items-start justify-between">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-rose-500 to-pink-500 flex items-center justify-center shadow-xl group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                    <AlertTriangle className="w-8 h-8 text-white" />
-                  </div>
-                  <Badge className="bg-rose-100 text-rose-700 border-2 border-rose-300">
-                    AI Tool
-                  </Badge>
-                </div>
-                <h3 className="text-2xl font-black text-gray-800">
-                  Anti-Pattern Detection
-                </h3>
-                <div className="space-y-3">
-                  <div className="p-4 rounded-xl bg-white border-2 border-rose-200">
-                    <p className="text-sm font-bold text-gray-500 mb-2">
-                      Method
-                    </p>
-                    <p className="text-gray-700">
-                      {data?.ai_tools?.anti_pattern_detection.method}
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <p className="text-sm font-bold text-gray-500 flex items-center gap-2">
-                      <AlertCircle className="w-4 h-4 text-rose-500" />
-                      Patterns Found
-                    </p>
-                    {data?.ai_tools?.anti_pattern_detection.patterns_found.map(
-                      (pattern, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-start gap-2 p-3 rounded-lg bg-white border border-rose-200"
-                        >
-                          <XCircle className="w-4 h-4 text-rose-500 mt-0.5 flex-shrink-0" />
-                          <span className="text-sm text-gray-700">
-                            {pattern}
-                          </span>
-                        </div>
-                      )
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-
         {/* Migration Process */}
         <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-12 sm:p-16 text-center flex justify-between shadow-2xl">
           <div className="flex   items-center">
@@ -1222,64 +1192,7 @@ const AnalysisPage = () => {
             </Link>
           </div>
         </div>
-
-        {/* CTA Section */}
-        {/* <Card className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-500 border-0 shadow-2xl overflow-hidden">
-          <div className="absolute  bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxLTEuNzktNC00LTRzLTQgMS43OS00IDQgMS43OSA0IDQgNCA0LTEuNzkgNC00em0wLTEwYzAtMi4yMS0xLjc5LTQtNC00cy00IDEuNzktNCA0IDEuNzkgNCA0IDQgNC0xLjc5IDQtNHptMC0xMGMwLTIuMjEtMS43OS00LTQtNHMtNCAxLjc5LTQgNCAxLjc5IDQgNCA0IDQtMS43OSA0LTR6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20" />
-          <CardContent className="relative p-12 text-center space-y-6">
-            <Rocket className="w-20 h-20 text-white mx-auto animate-bounce" />
-            <h3 className="text-5xl font-black text-white">
-              Ready to Transform?
-            </h3>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Start your migration journey today with AI-powered analysis and
-              expert guidance
-            </p>
-            <button className="group px-8 py-4 bg-white text-purple-600 rounded-2xl font-black text-lg shadow-2xl hover:shadow-3xl hover:scale-105 transition-all duration-300 flex items-center gap-3 mx-auto">
-              Get Started Now
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
-            </button>
-          </CardContent>
-        </Card> */}
       </div>
-
-      {/* Custom Scrollbar */}
-      <style>{`
-        ::-webkit-scrollbar {
-          width: 12px;
-        }
-        
-        ::-webkit-scrollbar-track {
-          background: linear-gradient(to bottom, #e0f2fe, #ddd6fe);
-        }
-        
-        ::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #06b6d4, #8b5cf6);
-          border-radius: 6px;
-          border: 2px solid #e0f2fe;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #0891b2, #7c3aed);
-        }
-
-        * {
-          scrollbar-width: thin;
-          scrollbar-color: #06b6d4 #e0f2fe;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          * {
-            animation-duration: 0.01ms !important;
-            animation-iteration-count: 1 !important;
-            transition-duration: 0.01ms !important;
-          }
-        }
-
-        .perspective-1000 {
-          perspective: 1000px;
-        }
-      `}</style>
     </div>
   );
 };

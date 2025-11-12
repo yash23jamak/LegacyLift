@@ -11,7 +11,7 @@ import Home from "./pages/home";
 import BackButton from "./components/BackButton";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import MigrationUI from "./components/migrationUI";
+import MigrationUI from "./components/MigrationUI";
 
 const queryClient = new QueryClient();
 

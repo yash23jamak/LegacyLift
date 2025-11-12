@@ -148,8 +148,8 @@ const ProgressBar = ({
                       isCurrent
                         ? "bg-white shadow-lg scale-105 ring-2 ring-blue-500"
                         : isComplete
-                        ? "bg-white/70 shadow"
-                        : "bg-white/40"
+                          ? "bg-white/70 shadow"
+                          : "bg-white/40"
                     }`}
                   >
                     <div
@@ -157,8 +157,8 @@ const ProgressBar = ({
                         isComplete
                           ? "bg-gradient-to-br from-green-400 to-emerald-500 shadow-md"
                           : isCurrent
-                          ? "bg-gradient-to-br from-blue-400 to-purple-500 shadow-md animate-pulse"
-                          : "bg-gray-200"
+                            ? "bg-gradient-to-br from-blue-400 to-purple-500 shadow-md animate-pulse"
+                            : "bg-gray-200"
                       }`}
                     >
                       {isComplete ? (
@@ -176,8 +176,8 @@ const ProgressBar = ({
                         isCurrent
                           ? "text-gray-900"
                           : isComplete
-                          ? "text-gray-700"
-                          : "text-gray-500"
+                            ? "text-gray-700"
+                            : "text-gray-500"
                       }`}
                     >
                       {item.name}

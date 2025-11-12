@@ -15,7 +15,7 @@ const Footer = () => {
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold text-white">Xccelerator</span>
+              <span className="text-xl font-bold text-white">LegacyLift</span>
             </div>
             <p className="text-sm leading-relaxed">
               Transform legacy applications into modern React solutions with

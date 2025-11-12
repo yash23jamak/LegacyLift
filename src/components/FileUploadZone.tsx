@@ -246,7 +246,7 @@ export const FileUploadZone = ({
                             setGithubUrl(
                               `https://github.com/${repo.name
                                 .toLowerCase()
-                                .replace(/\s+/g, "-")}`
+                                .replace(/\s+/g, "-")}`,
                             )
                           }
                         >
