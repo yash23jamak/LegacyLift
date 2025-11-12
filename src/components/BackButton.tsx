@@ -6,8 +6,8 @@ const BackButton = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Don't show on root path
-  if (location.pathname === "/") {
+  // Don't show on root or signup page
+  if (location.pathname === "/" || location.pathname === "/signup") {
     return null;
   }
 
