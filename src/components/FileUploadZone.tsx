@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useApi } from "@/hooks/useAPI";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { useNavigate } from "react-router-dom";
 
 interface FileUploadZoneProps {
   onFilesUpload: (files: File[]) => void;
@@ -44,6 +45,7 @@ export const FileUploadZone = ({
   const [activeTab, setActiveTab] = useState("upload");
   const { toast } = useToast();
   const { apiCall, loading, error } = useApi();
+  const navigate = useNavigate();
 
   // Dummy JSON with file names
   const [files, setFiles] = useState(filesList || []);
@@ -93,7 +95,6 @@ export const FileUploadZone = ({
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      console.log("e.target.files: ", e.target.files);
       const file = e.target.files[0];
 
       // ✅ Only allow .zip
@@ -153,16 +154,18 @@ export const FileUploadZone = ({
     });
 
     if (response) {
-      console.log("response: ", response);
+          navigate("/analysis", {
+        state: { analysisAPIData: response.data.report },
+      });
       toast({
-        title: "Upload Successful",
-        description: "Your files have been sent to the API.",
+        title: "Analysis Complete!",
+        description: "Your Analysis Report is Ready.",
       });
     } else {
       console.log("error: ", error);
       toast({
         variant: "destructive",
-        title: "Upload Failed",
+        title: "Analysis Failed",
         description: "There was an error sending your files to the API.",
       });
     }
@@ -368,15 +371,15 @@ export const FileUploadZone = ({
                     <span className="text-sm font-medium">
                       {file?.name || "Unnamed File"}
                     </span>
-                    <Button
+                    {/* <Button
                       variant="destructive"
                       size="sm"
                       onClick={() => handleDeleteFile(index)}
                       className="ml-4"
-                    >
-                      <Trash className="w-4 h-4" />
-                      Delete
-                    </Button>
+                    > */}
+                      <Trash className="w-4 h-4 cursor-pointer text-red-500 hover:text-red-600 hover:scale-110" onClick={() => handleDeleteFile(index)}/>
+                      {/* Delete
+                    </Button> */}
                   </li>
                 ))}
               </ul>
@@ -384,6 +387,7 @@ export const FileUploadZone = ({
             <div className="place-self-end mt-4">
               <Button
                 onClick={handleSubmit}
+                disabled={loading}
                 className="w-full sm:w-auto  text-white px-8 py-6 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-md flex items-center justify-center"
               >
                 {loading ? (

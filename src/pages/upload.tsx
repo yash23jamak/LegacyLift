@@ -31,7 +31,6 @@ const UploadProject = () => {
     if (files.length === 0) return;
 
     const file = files[0];
-    console.log('file: ', file);
     const formData = new FormData();
     formData.append("folder", file);
 
@@ -57,18 +56,18 @@ const UploadProject = () => {
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");
       toast({
-        title: "Analysis Complete!",
-        description: "Your JSP project has been successfully analyzed.",
+        title: "Zip Uploaded Successfully!",
+        description: "Please check Your Files ",
       });
     } catch {
       console.error("Error analyzing project:", error);
-      setAnalysisReport("Error during analysis. Please try again.");
+      setAnalysisReport("Error during Uploading. Please try again.");
       setConvertedCode("");
       toast({
         variant: "destructive",
-        title: "Analysis Failed",
+        title: "Uploading Failed",
         description:
-          "There was an error analyzing your project. Please try again.",
+          "There was an error uploading your project. Please try again.",
       });
     } finally {
       setLoading(false);

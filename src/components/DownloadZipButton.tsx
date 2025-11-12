@@ -1,25 +1,24 @@
-
-import React from 'react';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
-import { useAppContext } from '@/contexts/useContext';
-import { MIGRATION_PROMPT } from '@/prompt/analysisPrompt';
+import React from "react";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+import { useAppContext } from "@/contexts/useContext";
+import { MIGRATION_PROMPT } from "@/prompt/analysisPrompt";
 
 const DownloadZipButton = ({ files }) => {
 
 
     const { uploadedFileContext } = useAppContext();
 
-      const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL;
   const apiKey = import.meta.env.VITE_API_KEY;
   const apiModal = import.meta.env.VITE_AI_MODAL;
 
   const handleDownload = async () => {
     try {
-          const prompt = `${MIGRATION_PROMPT}
+      const prompt = `${MIGRATION_PROMPT}
           Project Files:
       ${uploadedFileContext}`;
-          const response = await fetch(apiUrl, {
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${apiKey}`,
@@ -57,31 +56,32 @@ const DownloadZipButton = ({ files }) => {
       //   description: "Your JSP project has been successfully analyzed.",
       // });
 
+      if (!jsonString || !files.length) {
+        alert("No files to download");
+        return;
+      }
 
-    if (!jsonString || !files.length) {
-      alert('No files to download');
-      return;
+      const zip = new JSZip();
+
+      files.forEach(({ name, content }) => {
+        // If content is an object (like JSON), convert to string
+        const fileContent =
+          typeof content === "string"
+            ? content
+            : JSON.stringify(content, null, 2);
+        zip.file(name, fileContent);
+      });
+
+      try {
+        const blob = await zip.generateAsync({ type: "blob" });
+        saveAs(blob, "react-migration-project.zip");
+      } catch (error) {
+        console.error(error);
+      }
+    } catch (error) {
+      console.log("error: ", error);
     }
-
-    const zip = new JSZip();
-
-  files.forEach(({ name, content }) => {
-    // If content is an object (like JSON), convert to string
-    const fileContent = typeof content === 'string' ? content : JSON.stringify(content, null, 2);
-    zip.file(name, fileContent);
-  });
-
-  try {
-    const blob = await zip.generateAsync({ type: 'blob' });
-    saveAs(blob, 'react-migration-project.zip');
-  } catch (error) {
-    console.error(error);
-  }
-}
-   catch (error) {
-    console.log('error: ', error);
-    }
-};
+  };
 
   return (
     <button

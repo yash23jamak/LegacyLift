@@ -1,7 +1,20 @@
-import { BarChart3, Download, TrendingUp, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import {
+  BarChart3,
+  Download,
+  TrendingUp,
+  AlertTriangle,
+  CheckCircle2,
+  Clock,
+} from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface AnalysisReportProps {
   report: string;
@@ -11,7 +24,7 @@ interface AnalysisReportProps {
 export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
   // Parse the report to extract structured sections
   const parseReport = (text: string) => {
-    const sections = text.split('\n\n').filter(Boolean);
+    const sections = text.split("\n\n").filter(Boolean);
     return sections;
   };
 
@@ -20,15 +33,15 @@ export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
   // Extract key metrics from the report
   const extractMetrics = (text: string) => {
     const metrics = [];
-    
+
     // Look for complexity score
     const complexityMatch = text.match(/complexity score[:\s]+(\d+)/i);
     if (complexityMatch) {
       metrics.push({
-        label: 'Complexity Score',
+        label: "Complexity Score",
         value: complexityMatch[1],
         icon: TrendingUp,
-        color: 'text-primary'
+        color: "text-primary",
       });
     }
 
@@ -36,10 +49,10 @@ export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
     const timelineMatch = text.match(/(\d+-\d+)\s+weeks/i);
     if (timelineMatch) {
       metrics.push({
-        label: 'Estimated Timeline',
+        label: "Estimated Timeline",
         value: `${timelineMatch[1]} weeks`,
         icon: Clock,
-        color: 'text-accent'
+        color: "text-accent",
       });
     }
 
@@ -47,10 +60,10 @@ export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
     const phasesMatch = text.match(/(\d+)\s+of\s+(\d+)\s+phases/i);
     if (phasesMatch) {
       metrics.push({
-        label: 'Migration Progress',
+        label: "Migration Progress",
         value: `${phasesMatch[1]}/${phasesMatch[2]} phases`,
         icon: CheckCircle2,
-        color: 'text-accent'
+        color: "text-accent",
       });
     }
 
@@ -70,7 +83,9 @@ export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
                 <BarChart3 className="w-6 h-6" />
               </div>
               <div>
-                <CardTitle className="text-2xl">Project Analysis Report</CardTitle>
+                <CardTitle className="text-2xl">
+                  Project Analysis Report
+                </CardTitle>
                 <CardDescription className="text-primary-foreground/80 mt-1">
                   AI-powered comprehensive code analysis
                 </CardDescription>
@@ -95,11 +110,15 @@ export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
                   key={index}
                   className="flex items-center gap-4 p-4 rounded-lg bg-secondary/50 border border-border transition-smooth hover:shadow-md hover:scale-105"
                 >
-                  <div className={`p-3 rounded-lg bg-background ${metric.color}`}>
+                  <div
+                    className={`p-3 rounded-lg bg-background ${metric.color}`}
+                  >
                     <metric.icon className="w-5 h-5" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">{metric.label}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {metric.label}
+                    </p>
                     <p className="text-xl font-bold">{metric.value}</p>
                   </div>
                 </div>
@@ -112,25 +131,32 @@ export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
       {/* Report sections */}
       <div className="grid gap-6">
         {sections.map((section, index) => {
-          const isHeading = section.length < 100 && !section.includes('.');
-          const hasWarning = section.toLowerCase().includes('vulnerability') || 
-                           section.toLowerCase().includes('deprecated') ||
-                           section.toLowerCase().includes('risk');
-          const hasSuccess = section.toLowerCase().includes('recommend') ||
-                           section.toLowerCase().includes('best practice');
+          const isHeading = section.length < 100 && !section.includes(".");
+          const hasWarning =
+            section.toLowerCase().includes("vulnerability") ||
+            section.toLowerCase().includes("deprecated") ||
+            section.toLowerCase().includes("risk");
+          const hasSuccess =
+            section.toLowerCase().includes("recommend") ||
+            section.toLowerCase().includes("best practice");
 
           if (isHeading) {
             return (
               <div key={index} className="flex items-center gap-3 mt-4">
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
-                <h3 className="text-lg font-semibold text-foreground px-4">{section}</h3>
+                <h3 className="text-lg font-semibold text-foreground px-4">
+                  {section}
+                </h3>
                 <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
               </div>
             );
           }
 
           return (
-            <Card key={index} className="shadow-card transition-smooth hover:shadow-card-hover">
+            <Card
+              key={index}
+              className="shadow-card transition-smooth hover:shadow-card-hover"
+            >
               <CardContent className="pt-6">
                 <div className="flex items-start gap-3">
                   {hasWarning && (

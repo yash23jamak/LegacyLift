@@ -53,7 +53,6 @@ const AnalysisPage = () => {
 
   useEffect(() => {
     if (analysisAPIData) {
-      // console.log("Received analysis API data:", analysisAPIData);
       try {
         if (typeof analysisAPIData === "string") {
           const parsed = JSON.parse(analysisAPIData);
