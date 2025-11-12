@@ -1,7 +1,13 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosResponse,
+  AxiosError,
+  InternalAxiosRequestConfig,
+} from "axios";
 
 // Environment variables for Vite
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000/api/v1';
+const API_BASE_URL =
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api/v1";
 // const API_TIMEOUT = 10000;
 
 // Create axios instance with default configuration
@@ -9,7 +15,7 @@ const APIInterceptor: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
   // timeout: API_TIMEOUT,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
 });
 
@@ -24,8 +30,8 @@ APIInterceptor.interceptors.request.use(
 
     // Add custom headers for tracking
     if (config.headers) {
-      config.headers['X-Requested-With'] = 'XMLHttpRequest';
-      config.headers['X-Client-Version'] = '1.0.0';
+      config.headers["X-Requested-With"] = "XMLHttpRequest";
+      config.headers["X-Client-Version"] = "1.0.0";
     }
 
     return config;
@@ -33,7 +39,7 @@ APIInterceptor.interceptors.request.use(
   (error: AxiosError): Promise<AxiosError> => {
     // Log request errors in development
     if (import.meta.env.DEV) {
-      console.error('Request Interceptor Error:', error);
+      console.error("Request Interceptor Error:", error);
     }
     return Promise.reject(error);
   }
@@ -46,7 +52,9 @@ APIInterceptor.interceptors.response.use(
     return response;
   },
   (error: AxiosError): Promise<AxiosError> => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
     if (error.response) {
       const { status } = error.response;
@@ -71,37 +79,37 @@ APIInterceptor.interceptors.response.use(
 
 // Helper functions
 function getAuthToken(): string | null {
-  return localStorage.getItem('authToken');
+  return localStorage.getItem("authToken");
 }
 
 function handleUnauthorized(): void {
   // Clear invalid token
-  localStorage.removeItem('authToken');
+  localStorage.removeItem("authToken");
 
   // Redirect to login page (adjust route as needed)
-  if (typeof window !== 'undefined') {
-    window.location.href = '/login';
+  if (typeof window !== "undefined") {
+    window.location.href = "/login";
   }
 }
 
 function handleHttpError(status: number, data: any): void {
-  let message = 'An unexpected error occurred';
+  let message = "An unexpected error occurred";
 
   switch (status) {
     case 400:
-      message = 'Bad Request: Please check your input';
+      message = "Bad Request: Please check your input";
       break;
     case 403:
-      message = 'Forbidden: Access denied';
+      message = "Forbidden: Access denied";
       break;
     case 404:
-      message = 'Not Found: Resource not available';
+      message = "Not Found: Resource not available";
       break;
     case 422:
-      message = 'Validation Error: Please check your data';
+      message = "Validation Error: Please check your data";
       break;
     case 500:
-      message = 'Server Error: Please try again later';
+      message = "Server Error: Please try again later";
       break;
     default:
       if (data?.message) {
@@ -113,20 +121,14 @@ function handleHttpError(status: number, data: any): void {
   if (import.meta.env.DEV) {
     console.error(`HTTP ${status}:`, message);
   }
-
-  // You could integrate with a toast notification system here
-  // toast.error(message);
 }
 
 function handleNetworkError(): void {
-  const message = 'Network Error: Please check your connection';
+  const message = "Network Error: Please check your connection";
 
   if (import.meta.env.DEV) {
     console.error(message);
   }
-
-  // You could integrate with a toast notification system here
-  // toast.error(message);
 }
 
 export default APIInterceptor;

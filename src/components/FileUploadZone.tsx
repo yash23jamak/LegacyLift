@@ -154,7 +154,7 @@ export const FileUploadZone = ({
     });
 
     if (response) {
-          navigate("/analysis", {
+      navigate("/analysis", {
         state: { analysisAPIData: response.data.report },
       });
       toast({
@@ -371,15 +371,11 @@ export const FileUploadZone = ({
                     <span className="text-sm font-medium">
                       {file?.name || "Unnamed File"}
                     </span>
-                    {/* <Button
-                      variant="destructive"
-                      size="sm"
+
+                    <Trash
+                      className="w-4 h-4 cursor-pointer text-red-500 hover:text-red-600 hover:scale-110"
                       onClick={() => handleDeleteFile(index)}
-                      className="ml-4"
-                    > */}
-                      <Trash className="w-4 h-4 cursor-pointer text-red-500 hover:text-red-600 hover:scale-110" onClick={() => handleDeleteFile(index)}/>
-                      {/* Delete
-                    </Button> */}
+                    />
                   </li>
                 ))}
               </ul>
@@ -391,9 +387,7 @@ export const FileUploadZone = ({
                 className="w-full sm:w-auto  text-white px-8 py-6 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-md flex items-center justify-center"
               >
                 {loading ? (
-                  <>
-                  Analysing...
-                  </>
+                  <>Analysing...</>
                 ) : (
                   <>
                     Start Analysis

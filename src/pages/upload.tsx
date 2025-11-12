@@ -2,8 +2,6 @@ import { useState } from "react";
 import { CheckCircle, Brain, Zap, Target } from "lucide-react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
-import APIInterceptor from "@/lib/axiosInterceptor";
 import { useApi } from "@/hooks/useAPI";
 
 const UploadProject = () => {
@@ -14,12 +12,12 @@ const UploadProject = () => {
   const [isReportData, setIsReportData] = useState(false);
   const [analysisReport, setAnalysisReport] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [filesList, setFilesList] = useState<File[]>([]);
+  const [filesList, setFilesList] = useState<
+    Array<{ name: string; content: string }>
+  >([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
   const { apiCall, error } = useApi();
-
-  const navigate = useNavigate();
 
   const handleFileUpload = async (files: File[]) => {
     setUploadedFiles(files);
@@ -45,12 +43,8 @@ const UploadProject = () => {
         },
       });
 
-      setFilesList(response?.data?.report || []);
+      setFilesList(response?.data?.files || []);
       const data = response.data;
-
-      // navigate("/analysis", {
-      //   state: { analysisAPIData: data.report },
-      // });
 
       setIsReportData(() => true);
       setAnalysisReport(data.report || "No report generated.");
@@ -85,10 +79,6 @@ const UploadProject = () => {
       });
 
       const data = response.data;
-
-      // navigate("/analysis", {
-      //   state: { analysisAPIData: data.report },
-      // });
 
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");

@@ -40,21 +40,13 @@ const DownloadZipButton = ({ files }) => {
       const resultContent =
         data.choices?.[0]?.message?.content || "Analysis failed.";
       const [report, ...codeParts] = resultContent.split("```");
-      // setAnalysisReport(report.trim());
-
-      // setIsReportData(true)
 
       let jsonString = codeParts.join("```").trim();
       jsonString = jsonString
         .replace(/^json\s*/i, "")
         .replace(/```/g, "")
         .trim();
-      // setConvertedCode(jsonString);
 
-      // toast({
-      //   title: "Analysis Complete!",
-      //   description: "Your JSP project has been successfully analyzed.",
-      // });
 
       if (!jsonString || !files.length) {
         alert("No files to download");
