@@ -26,7 +26,6 @@ const SignupPage = () => {
     });
 
     const handleSignup = async (data: SignupFormData) => {
-        console.log(data, "response");
         setLoading(true);
         try {
             const response = await fetch(`${backendUrl}/auth/register`, {
