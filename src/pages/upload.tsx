@@ -2,9 +2,9 @@ import { useState } from "react";
 import { CheckCircle, Brain, Zap, Target } from "lucide-react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
-import { useNavigate } from "react-router-dom";
+import { useApi } from "@/hooks/useAPI";
 
-const Index = () => {
+const UploadProject = () => {
   const [filesContent, setFilesContent] = useState<
     Array<{ name: string; content: string }>
   >([]);
@@ -12,17 +12,19 @@ const Index = () => {
   const [isReportData, setIsReportData] = useState(false);
   const [analysisReport, setAnalysisReport] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [filesList, setFilesList] = useState<
+    Array<{ name: string; content: string }>
+  >([]);
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-
-  const navigate = useNavigate();
-  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const { apiCall, error } = useApi();
 
   const handleFileUpload = async (files: File[]) => {
     setUploadedFiles(files);
     await analyzeProject(files);
   };
 
+  // API Function to analyze uploaded project
   const analyzeProject = async (files: File[]) => {
     if (files.length === 0) return;
 
@@ -32,63 +34,51 @@ const Index = () => {
 
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/analyze-project`, {
-        method: "POST",
-        body: formData,
+      const response = await apiCall({
+        method: "post",
+        url: "/analyze-project",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      navigate("/analysis", {
-        state: { ananlysisAPIData: data.report },
-      });
+      setFilesList(response?.data?.report || []);
+      const data = response.data;
 
       setIsReportData(() => true);
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");
       toast({
-        title: "Analysis Complete!",
-        description: "Your JSP project has been successfully analyzed.",
+        title: "Zip Uploaded Successfully!",
+        description: "Please check Your Files ",
       });
-    } catch (error) {
+    } catch {
       console.error("Error analyzing project:", error);
-      setAnalysisReport("Error during analysis. Please try again.");
+      setAnalysisReport("Error during Uploading. Please try again.");
       setConvertedCode("");
       toast({
         variant: "destructive",
-        title: "Analysis Failed",
+        title: "Uploading Failed",
         description:
-          "There was an error analyzing your project. Please try again.",
+          "There was an error uploading your project. Please try again.",
       });
     } finally {
       setLoading(false);
     }
   };
 
+  // API Function to analyze GitHub repo
   const analyzeRepo = async (repoUrl: string) => {
     setLoading(true);
     try {
-      const response = await fetch(`${backendUrl}/analyze-project`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ repoUrl }),
+      const response = await apiCall({
+        method: "post",
+        url: "/analyze-project",
+        data: { repoUrl },
       });
 
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-
-      navigate("/analysis", {
-        state: { ananlysisAPIData: data.report },
-      });
+      const data = response.data;
 
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");
@@ -98,12 +88,14 @@ const Index = () => {
         title: "Analysis Complete!",
         description: "Your JSP project has been successfully analyzed.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error analyzing repo:", error);
       toast({
         variant: "destructive",
         title: "Repo Analysis Failed",
-        description: "Could not analyze the repository. Please try again.",
+        description:
+          error.response?.data?.message ||
+          "Could not analyze the repository. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -113,7 +105,7 @@ const Index = () => {
   return (
     <div className="min-h-screen container mx-auto pb-12">
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 space-y-8">
+      <main className="max-w-7xl mx-auto px-6 space-y-8 mt-5">
         {/* File Upload */}
         <FileUploadZone
           onFilesUpload={handleFileUpload}
@@ -121,7 +113,8 @@ const Index = () => {
           uploadedFiles={filesContent}
           isLoading={loading}
           isReportData={isReportData}
-          ananlysisAPIData={convertedCode}
+          analysisAPIData={convertedCode}
+          filesList={filesList}
         />
 
         {/* Success Message */}
@@ -143,4 +136,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default UploadProject;
