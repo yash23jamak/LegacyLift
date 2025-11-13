@@ -134,12 +134,12 @@ function buildTreeFromFiles(files: ProjectFile[]): VirtualNode[] {
   const root: Record<string, VirtualNode> = {};
 
   for (const file of files) {
-    const parts = file.name.split("/");
+    const parts = file?.name?.split("/");
     let current = root;
 
-    for (let i = 0; i < parts.length; i++) {
+    for (let i = 0; i < parts?.length; i++) {
       const part = parts[i];
-      const currentPath = parts.slice(0, i + 1).join("/");
+      const currentPath = parts?.slice(0, i + 1).join("/");
 
       if (i === parts.length - 1) {
         // It's a file
@@ -200,7 +200,7 @@ export const FileExplorer: React.FC<FileExplorerProps> = ({ files }) => {
     setFileContent(content);
   };
 
-  const fileName = selectedPath.split("/").pop() || "untitled";
+  const fileName = selectedPath?.split("/")?.pop() || "untitled";
 
   return (
     <PanelGroup

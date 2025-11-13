@@ -1,12 +1,12 @@
-import React from "react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";
 import { MIGRATION_PROMPT } from "@/prompt/analysisPrompt";
 
 const DownloadZipButton = ({ files }) => {
-  const { uploadedFileContext } = useAppContext();
-  console.log("uploadedFileContext: ----------", uploadedFileContext);
+
+
+    const { uploadedFileContext } = useAppContext();
 
   const apiUrl = import.meta.env.VITE_API_URL;
   const apiKey = import.meta.env.VITE_API_KEY;
@@ -36,25 +36,16 @@ const DownloadZipButton = ({ files }) => {
       }
 
       const data = await response.json();
-      console.log("data: ", data);
       const resultContent =
         data.choices?.[0]?.message?.content || "Analysis failed.";
       const [report, ...codeParts] = resultContent.split("```");
-      // setAnalysisReport(report.trim());
-
-      // setIsReportData(true)
 
       let jsonString = codeParts.join("```").trim();
       jsonString = jsonString
         .replace(/^json\s*/i, "")
         .replace(/```/g, "")
         .trim();
-      // setConvertedCode(jsonString);
 
-      // toast({
-      //   title: "Analysis Complete!",
-      //   description: "Your JSP project has been successfully analyzed.",
-      // });
 
       if (!jsonString || !files.length) {
         alert("No files to download");
