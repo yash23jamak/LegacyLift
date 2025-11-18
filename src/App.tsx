@@ -11,9 +11,10 @@ import Home from "./pages/home";
 import BackButton from "./components/BackButton";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import MigrationUI from "./components/migrationUI";
+import MigrationUI from "./pages/migrationUI";
 import SignupPage from "./components/SignupPage";
 import LoginPage from "./components/LoginPage";
+import { AppProvider } from "./contexts/useContext";
 
 const queryClient = new QueryClient();
 
@@ -41,25 +42,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/upload" element={<Index />} />
-            <Route path="/analysis" element={<AnalysisPage />} />
-            <Route path="/migration" element={<MigrationUI />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <AppProvider>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/home" element={<Home />} />
+              <Route path="/upload" element={<UploadProject />} />
+              <Route path="/analysis" element={<AnalysisPage />} />
+              <Route path="/migration" element={<MigrationUI />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </AppProvider>
 );
 
 export default App;

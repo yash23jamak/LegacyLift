@@ -17,57 +17,53 @@ const APIInterceptor: AxiosInstance = axios.create({
   headers: {
     "Content-Type": "application/json",
   },
+  withCredentials: true,
 });
 
 // Request Interceptor
 APIInterceptor.interceptors.request.use(
   (config: InternalAxiosRequestConfig): InternalAxiosRequestConfig => {
-    // Add authorization token if available
-    const token = getAuthToken();
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    // Add custom headers for tracking
+    // No need to manually add token since HttpOnly cookie is sent automatically
+    // Add custom headers if needed
     if (config.headers) {
       config.headers["X-Requested-With"] = "XMLHttpRequest";
       config.headers["X-Client-Version"] = "1.0.0";
     }
-
     return config;
   },
-  (error: AxiosError): Promise<AxiosError> => {
-    // Log request errors in development
-    if (import.meta.env.DEV) {
-      console.error("Request Interceptor Error:", error);
-    }
-    return Promise.reject(error);
-  }
+  (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
 );
+
+
 
 // Response Interceptor
 APIInterceptor.interceptors.response.use(
-  (response: AxiosResponse): AxiosResponse => {
-    // Return successful responses as-is
-    return response;
-  },
-  (error: AxiosError): Promise<AxiosError> => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
+  (response: AxiosResponse): AxiosResponse => response,
+  async (error: AxiosError): Promise<AxiosError> => {
+    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
     if (error.response) {
-      const { status } = error.response;
+      const { status, data } = error.response;
 
       // Handle 401 Unauthorized
       if (status === 401 && !originalRequest._retry) {
-        // Attempt token refresh or redirect to login
-        handleUnauthorized();
-        return Promise.reject(error);
-      }
+        originalRequest._retry = true;
 
-      // Handle other HTTP errors
-      handleHttpError(status, error.response.data);
+        try {
+          // Call backend logout endpoint to clear cookie
+          await axios.post(`${API_BASE_URL}/auth/logout`, {}, { withCredentials: true });
+        } catch (e) {
+          console.error("Failed to clear cookie:", e);
+        }
+
+        // Redirect to login page
+        if (typeof window !== "undefined") {
+          window.location.href = "/";
+        }
+      } else {
+        // ✅ Call handleHttpError for other status codes
+        handleHttpError(status, data);
+      }
     } else if (error.request) {
       // Network error
       handleNetworkError();
@@ -76,22 +72,6 @@ APIInterceptor.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// Helper functions
-function getAuthToken(): string | null {
-  return localStorage.getItem("authToken");
-}
-
-function handleUnauthorized(): void {
-  // Clear invalid token
-  localStorage.removeItem("authToken");
-
-  // Redirect to login page (adjust route as needed)
-  if (typeof window !== "undefined") {
-    window.location.href = "/login";
-  }
-}
-
 function handleHttpError(status: number, data: any): void {
   let message = "An unexpected error occurred";
 

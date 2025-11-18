@@ -26,7 +26,7 @@ interface FeatureMapping {
   benefits: string[];
 }
 
-function migrationUI() {
+function MigrationUI() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"name" | "complexity">("name");
   const [loading, setLoading] = useState(false);
@@ -395,4 +395,4 @@ function migrationUI() {
   );
 }
 
-export default migrationUI;
+export default MigrationUI;
