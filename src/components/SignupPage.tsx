@@ -156,16 +156,6 @@ const SignupPage = () => {
                     <hr className="flex-grow border-gray-300" />
                 </div>
 
-                {/* Google Sign Up */}
-                <button className="w-full py-3 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-100 transition">
-                    <img
-                        src="https://www.svgrepo.com/show/355037/google.svg"
-                        alt="Google Logo"
-                        className="h-6 mr-2"
-                    />
-                    Sign up with Google
-                </button>
-
                 {/* Login Link */}
                 <div className="mt-6 text-center">
                     <span className="text-gray-500">Already have an account? </span>
