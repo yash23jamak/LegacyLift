@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CheckCircle, Brain, Zap, Target } from "lucide-react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
@@ -50,7 +50,7 @@ const UploadProject = () => {
       setAnalysisReport(data.report || "No report generated.");
       setConvertedCode(data.convertedCode || "");
       toast({
-        title: "Zip Uploaded Successfully!",
+        title: response?.data?.message || "Zip Uploaded Successfully!",
         description: "Please check Your Files ",
       });
     } catch {
@@ -59,7 +59,7 @@ const UploadProject = () => {
       setConvertedCode("");
       toast({
         variant: "destructive",
-        title: "Uploading Failed",
+        title: "Uploading Failed Please Try Again",
         description:
           "There was an error uploading your project. Please try again.",
       });
@@ -78,6 +78,7 @@ const UploadProject = () => {
         data: { repoUrl },
       });
 
+      setFilesList(response?.data?.report || []);
       const data = response.data;
 
       setAnalysisReport(data.report || "No report generated.");
@@ -100,8 +101,12 @@ const UploadProject = () => {
     } finally {
       setLoading(false);
     }
+    
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
+    
   };
-
   return (
     <div className="min-h-screen container mx-auto pb-12">
       {/* Main Content */}

@@ -8,6 +8,10 @@ const BackButton = () => {
   const location = useLocation();
   const showBackButton  = location.pathname !== "/";
 
+  // Don't show on root or signup page
+  if (location.pathname === "/" || location.pathname === "/signup") {
+    return null;
+  }
 
   return (
     <>

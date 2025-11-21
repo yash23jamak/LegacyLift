@@ -12,7 +12,9 @@ import BackButton from "./components/BackButton";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import MigrationUI from "./pages/migrationUI";
-import { AppProvider } from "@/contexts/useContext";
+import SignupPage from "./components/SignupPage";
+import LoginPage from "./components/LoginPage";
+import { AppProvider } from "./contexts/useContext";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +22,7 @@ const queryClient = new QueryClient();
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
-  const showBackButton = location.pathname !== "/";
+  const showBackButton = location.pathname !== "/" && location.pathname !== "/signup" && location.pathname !== "/home";
   return (
     <div className="min-h-screen">
       <Navbar />
@@ -48,7 +50,9 @@ const App = () => (
         <BrowserRouter>
           <Layout>
             <Routes>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<LoginPage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/home" element={<Home />} />
               <Route path="/upload" element={<UploadProject />} />
               <Route path="/analysis" element={<AnalysisPage />} />
               <Route path="/migration" element={<MigrationUI />} />

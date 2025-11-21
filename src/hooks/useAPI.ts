@@ -7,6 +7,7 @@ export function useApi<T = any, R = AxiosResponse<T>>() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+
   // apiCall: returns a function for making an API call
   const apiCall = useCallback(
     async (config: AxiosRequestConfig): Promise<R | null> => {
@@ -17,7 +18,7 @@ export function useApi<T = any, R = AxiosResponse<T>>() {
         return response;
       } catch (err) {
         setError(err as Error);
-        return null;
+        return err;
       } finally {
         setLoading(false);
       }

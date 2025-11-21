@@ -290,7 +290,7 @@ function Home() {
               React. Get started with a free analysis of your JSP project today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link to="upload">
+              <Link to="/upload">
                 <button className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2">
                   <span>Start Free Migration</span>
                   <ArrowRight className="w-5 h-5" />

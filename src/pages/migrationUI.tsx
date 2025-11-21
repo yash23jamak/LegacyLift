@@ -15,6 +15,7 @@ import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";
 import { Progress } from "@/components/ui/progress";
 import MigrationAnalysis from "@/components/MigrationAnalysis";
+import { useNavigate } from "react-router-dom";
 
 interface FeatureMapping {
   id: string;
@@ -26,12 +27,13 @@ interface FeatureMapping {
   benefits: string[];
 }
 
-function migrationUI() {
+function MigrationUI() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<"name" | "complexity">("name");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-  const { projectJson, migrationReportJson } = useAppContext();
+   const navigate = useNavigate();
+  const { projectJson, migrationReportJson,setProjectJson } = useAppContext();
 
   const featureMappings: FeatureMapping[] = [
     {
@@ -248,10 +250,16 @@ function migrationUI() {
     );
   }
 
+  if(projectJson?.files[0]?.error){
+    // setProjectJson(null);
+    navigate("/analysis")
+    return 
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <MigrationAnalysis ProjectJson={projectJson} />
+        <MigrationAnalysis ProjectJson={projectJson || []} />
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -395,4 +403,4 @@ function migrationUI() {
   );
 }
 
-export default migrationUI;
+export default MigrationUI;

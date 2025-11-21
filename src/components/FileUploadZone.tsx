@@ -19,6 +19,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useApi } from "@/hooks/useAPI";
 import JSZip from "jszip";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "@/contexts/useContext";
 
 interface FileUploadZoneProps {
   onFilesUpload: (files: File[]) => void;
@@ -45,7 +46,7 @@ export const FileUploadZone = ({
   const { toast } = useToast();
   const { apiCall, loading, error } = useApi();
   const navigate = useNavigate();
-
+  const { setAnalysisReportJson } = useAppContext();
   // Dummy JSON with file names
   const [files, setFiles] = useState(filesList || []);
 
@@ -152,20 +153,20 @@ export const FileUploadZone = ({
       },
     });
 
-    if (response) {
+    if (response?.data?.status == 200 && !response?.data?.report[0]?.error) {
+      setAnalysisReportJson(response?.data?.report)
       navigate("/analysis", {
-        state: { analysisAPIData: response.data.report },
+        state: { analysisAPIData: response?.data?.report },
       });
       toast({
-        title: "Analysis Complete!",
+        title:  response?.data?.message ||"Analysis Complete!",
         description: "Your Analysis Report is Ready.",
       });
     } else {
-      console.log("error: ", error);
       toast({
         variant: "destructive",
-        title: "Analysis Failed",
-        description: "There was an error sending your files to the API.",
+        title: "Analysis Failed Please Try Again !!",
+        description: "There was an error of AI service during ZIP analysis",
       });
     }
   };
@@ -196,6 +197,10 @@ export const FileUploadZone = ({
   useEffect(() => {
     setFiles(filesList || []);
   }, [filesList]);
+
+   useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
 
   return (
     <div>
