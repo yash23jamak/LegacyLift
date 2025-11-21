@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 
 import { AnalysisData } from "@/lib/analysis";
 import { ArrowRight } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/useContext";
 import AnalysisDetails from "@/components/AnalysisDetails";
 import { useApi } from "@/hooks/useAPI";
+import { useToast } from "@/hooks/use-toast";
 export interface AnalysisPageProps {
   analysisAPIData: string | AnalysisData;
 }
@@ -15,12 +16,14 @@ const AnalysisPage = () => {
   const [activeMetric, setActiveMetric] = useState(0);
   const [scrollY, setScrollY] = useState(0);
   const { apiCall, error } = useApi();
+  const { toast } = useToast();
 
   const { setProjectJson, setMigrationReportJson } = useAppContext();
 
   const location = useLocation();
-
-  const { analysisAPIData } = location.state || {};
+     const navigate = useNavigate();
+  const { analysisReportJson } = useAppContext();
+  const { analysisAPIData } = location.state || analysisReportJson || {};
 
   // API Integration For Migration Process
   const MigrationAPI = async () => {
@@ -43,16 +46,26 @@ const AnalysisPage = () => {
           "Content-Type": "application/json",
         },
       });
+      if (response?.status == 500 || response?.status == 502) {
+        toast({
+          variant: "destructive",
+          title: "Migration Failed Please Try Again",
+          description:
+            "There was an error during the migration process. Please try again later.",
+        });
+        return navigate("/analysis");
+      }
 
-      setMigrationReportJson(migrationReport.data.report[0]);
-      setProjectJson(response.data);
-    } catch {
+      setMigrationReportJson(migrationReport?.data?.report[0]);
+      setProjectJson(response?.data);
+    } catch (err) {
       console.log("error: ", error);
     }
   };
 
   useEffect(() => {
     if (analysisAPIData) {
+      // console.log("cehcke");
       try {
         if (typeof analysisAPIData === "string") {
           const parsed = JSON.parse(analysisAPIData);
@@ -80,6 +93,14 @@ const AnalysisPage = () => {
     return () => clearInterval(interval);
   }, []);
 
+useEffect(() => {
+setData(analysisReportJson[0] || {})
+}, [])
+
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
       {/* Floating Orbs Background */}

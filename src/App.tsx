@@ -22,7 +22,7 @@ const queryClient = new QueryClient();
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
 
-  const showBackButton = location.pathname !== "/";
+  const showBackButton = location.pathname !== "/" && location.pathname !== "/signup" && location.pathname !== "/home";
   return (
     <div className="min-h-screen">
       <Navbar />

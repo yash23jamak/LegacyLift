@@ -24,11 +24,19 @@ type MigrationReportType = [FeatureMapping[], Improvement[]] | null;
 
 interface AppContextType {
   uploadedFileContext: UploadedFile[] | null;
-  setUploadedFileContext: React.Dispatch<React.SetStateAction<UploadedFile[] | null>>;
+  setUploadedFileContext: React.Dispatch<
+    React.SetStateAction<UploadedFile[] | null>
+  >;
   projectJson: ProjectJsonType;
   setProjectJson: React.Dispatch<React.SetStateAction<ProjectJsonType>>;
   migrationReportJson: MigrationReportType;
-  setMigrationReportJson: React.Dispatch<React.SetStateAction<MigrationReportType>>;
+  setMigrationReportJson: React.Dispatch<
+    React.SetStateAction<MigrationReportType>
+  >;
+  analysisReportJson: MigrationReportType;
+  setAnalysisReportJson: React.Dispatch<
+    React.SetStateAction<MigrationReportType>
+  >;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -36,9 +44,14 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [uploadedFileContext, setUploadedFileContext] = useState<UploadedFile[] | null>(null);
+  const [uploadedFileContext, setUploadedFileContext] = useState<
+    UploadedFile[] | null
+  >(null);
   const [projectJson, setProjectJson] = useState<ProjectJsonType>(null);
-  const [migrationReportJson, setMigrationReportJson] = useState<MigrationReportType>(null);
+  const [migrationReportJson, setMigrationReportJson] =
+    useState<MigrationReportType>(null);
+  const [analysisReportJson, setAnalysisReportJson] =
+    useState<MigrationReportType>(null);
 
   return (
     <AppContext.Provider
@@ -49,6 +62,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setProjectJson,
         migrationReportJson,
         setMigrationReportJson,
+        analysisReportJson,
+        setAnalysisReportJson,
       }}
     >
       {children}

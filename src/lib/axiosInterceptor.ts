@@ -7,7 +7,7 @@ import axios, {
 
 // Environment variables for Vite
 const API_BASE_URL =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api/v1";
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:3007/api/v1";
 // const API_TIMEOUT = 10000;
 
 // Create axios instance with default configuration

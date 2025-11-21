@@ -6,7 +6,10 @@ import { modernCapabilities } from '@/lib/mockdata';
 
 
 
-const MigrationAnalysis: React.FC<{ProjectJson: ProjectFile[] | null}> = ({ProjectJson}) => {
+const MigrationAnalysis: React.FC<{ProjectJson: { files: ProjectFile[] } | ProjectFile[] | null}> = ({ProjectJson}) => {
+
+  const files = Array.isArray(ProjectJson) ? ProjectJson : ProjectJson?.files ?? [];
+
   return (
     <>
      <header className="mb-12 text-center">
@@ -29,7 +32,7 @@ const MigrationAnalysis: React.FC<{ProjectJson: ProjectFile[] | null}> = ({Proje
             <h2 className="text-3xl font-bold text-slate-900">Code Preview</h2>
           </div>
            <div className="h-[90vh] w-full p-4 mb-12">
-            <FileExplorer files={ProjectJson ?? []} />
+            <FileExplorer files={files} />
           </div>
           <div className="flex items-center gap-3 mb-6">
             <Zap className="w-7 h-7 text-blue-600" />

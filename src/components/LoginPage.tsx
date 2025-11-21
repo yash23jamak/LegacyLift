@@ -47,7 +47,7 @@ const LoginPage = () => {
             }
 
             toast({
-                title: result.message,
+                title: result.message || "Login successful",
             });
 
             navigate("/home");

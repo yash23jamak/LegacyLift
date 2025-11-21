@@ -2,6 +2,7 @@
 export interface ProjectFile {
   name: string; // e.g. "src/app/store.ts"
   content: string;
+  
 }
 
 // Virtual node for rendering (not stored in state)
