@@ -14,11 +14,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { AnalysisReportProps } from "@/lib/analysis";
 
-interface AnalysisReportProps {
-  report: string;
-  onDownload: () => void;
-}
+
 
 export const AnalysisReport = ({ report, onDownload }: AnalysisReportProps) => {
   // Parse the report to extract structured sections

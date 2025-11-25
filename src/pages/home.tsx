@@ -108,7 +108,7 @@ function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+    <div className="min-h-screen  mx-auto px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -228,7 +228,7 @@ function Home() {
           </div>
 
           {/* Flowchart Image */}
-          <div className="mt-16 bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
+          <div id="flowchart" className="mt-16 bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">
                 Migration Flow Diagram
@@ -247,7 +247,9 @@ function Home() {
           </div>
 
           {/* Tech Stack Overview */}
-          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
+          <div id="tech">
+          </div>
+          <div  className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
             <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">
               Modern Tech Stack Used
             </h3>

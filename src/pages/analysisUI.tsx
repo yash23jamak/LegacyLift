@@ -8,9 +8,7 @@ import AnalysisDetails from "@/components/AnalysisDetails";
 import { useApi } from "@/hooks/useAPI";
 import { useToast } from "@/hooks/use-toast";
 import { useStep } from "../contexts/useStepContext";
-export interface AnalysisPageProps {
-  analysisAPIData: string | AnalysisData;
-}
+
 
 const AnalysisPage = () => {
   const [data, setData] = useState<AnalysisData | null>(null);
@@ -32,6 +30,9 @@ const AnalysisPage = () => {
   // API Integration For Migration Process
   const MigrationAPI = async () => {
     try {
+      //Update step to 3
+      setStep(3);
+      navigate("/migration");
       // Call for Migration Report
       const migrationReport = await apiCall({
         method: "post",
@@ -64,10 +65,9 @@ const AnalysisPage = () => {
       setMigrationReportJson(migrationReport?.data?.report[0]);
       setProjectJson(response?.data);
 
-      //Update step to 3
-      setStep(3);
 
-      navigate("/migration");
+
+      
 
     } catch (err) {
       toast({
@@ -108,16 +108,16 @@ const AnalysisPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    setData(analysisReportJson[0] || {})
-  }, [])
+useEffect(() => {
+setData(analysisReportJson?.[0] || null)
+}, [])
 
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden mx-auto px-4 sm:px-6 lg:px-8">
       {/* Floating Orbs Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none"></div>
 

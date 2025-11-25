@@ -28,8 +28,8 @@ const Logout = () => {
                 title: data.message,
                 description: data.message || "You have been logged out.",
             });
-
-            navigate("/");
+            localStorage.removeItem("userName");
+            navigate("/login");
         } catch (error) {
             toast({
                 title: "Logout Failed",

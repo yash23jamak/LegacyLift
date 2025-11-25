@@ -1,24 +1,11 @@
 import React, { createContext, useContext, useState, ReactNode } from "react";
 import { ProjectFile } from "@/type/fileExplorerType";
+import { FeatureMapping, Improvement, AnalysisData } from "@/lib/analysis";
 
 type UploadedFile = ProjectFile;
-type ProjectJsonType = UploadedFile[] | null;
+type ProjectJsonType = { files: UploadedFile[] } | null;
 
-interface FeatureMapping {
-  id: string;
-  legacyFeature: string;
-  reactEquivalent: string;
-  description: string;
-  category: "rendering" | "state" | "routing" | "data" | "ui";
-  complexity: "low" | "medium" | "high";
-  benefits: string[];
-}
 
-interface Improvement {
-  title: string;
-  stat: string;
-  description: string;
-}
 
 type MigrationReportType = [FeatureMapping[], Improvement[]] | null;
 
@@ -33,9 +20,9 @@ interface AppContextType {
   setMigrationReportJson: React.Dispatch<
     React.SetStateAction<MigrationReportType>
   >;
-  analysisReportJson: MigrationReportType;
+  analysisReportJson: AnalysisData[] | null;
   setAnalysisReportJson: React.Dispatch<
-    React.SetStateAction<MigrationReportType>
+    React.SetStateAction<AnalysisData[] | null>
   >;
 }
 
@@ -51,7 +38,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [migrationReportJson, setMigrationReportJson] =
     useState<MigrationReportType>(null);
   const [analysisReportJson, setAnalysisReportJson] =
-    useState<MigrationReportType>(null);
+    useState<AnalysisData[] | null>(null);
+    
 
   return (
     <AppContext.Provider
