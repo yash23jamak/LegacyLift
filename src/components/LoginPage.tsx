@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { loginSchema } from "@/lib/validation";
+import Cookies from "js-cookie";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -45,12 +46,15 @@ const LoginPage = () => {
             if (!response.ok) {
                 throw new Error(result.message || "Login failed. Please try again.");
             }
+            if (response.ok) {
+                Cookies.set("IsToken", true, { expires: 1 });
+            }
 
             toast({
                 title: result.message || "Login successful",
             });
 
-            navigate("/home");
+            navigate("/");
         } catch (err: any) {
             setError(err.message);
             toast({
@@ -62,6 +66,10 @@ const LoginPage = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div className="min-h-screen flex justify-center items-start pt-20 bg-gray-50">

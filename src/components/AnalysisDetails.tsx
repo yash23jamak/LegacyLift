@@ -131,11 +131,10 @@ const AnalysisDetails = ({ data, activeMetric }) => {
                 return (
                   <div
                     key={idx}
-                    className={`absolute inset-0 transition-all duration-700 ${
-                      isActive
-                        ? "opacity-100 scale-100 rotate-0"
-                        : "opacity-0 scale-90 rotate-12"
-                    }`}
+                    className={`absolute inset-0 transition-all duration-700 ${isActive
+                      ? "opacity-100 scale-100 rotate-0"
+                      : "opacity-0 scale-90 rotate-12"
+                      }`}
                   >
                     <Card
                       className={`h-full bg-gradient-to-br ${metric.bg} border-2 border-white shadow-2xl hover:shadow-3xl transition-all duration-500`}
@@ -498,70 +497,71 @@ const AnalysisDetails = ({ data, activeMetric }) => {
         </CardContent>
       </Card>
 
-      {/* Complexity Score */}
       <div className="grid md:grid-cols-3 gap-6">
+        {/* Complexity Score */}
         <Card className="bg-white/80 backdrop-blur-xl border-2 border-purple-200 hover:border-purple-400 transition-all duration-500 hover:shadow-2xl hover:shadow-purple-500/20">
-          <CardContent className="flex flex-col items-center justify-center h-full p-8 space-y-6">
-            <div className="relative w-48 h-48">
+          {/* Header with Icon + Title */}
+          <CardHeader>
+            <CardTitle className="text-2xl font-black text-purple-700 flex items-center gap-2">
+              <Activity className="w-6 h-6" /> {/* Different icon for Complexity */}
+              Complexity Score
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center justify-center space-y-4">
+            {/* Circular Progress - Centered */}
+            <div className="relative w-32 h-32 flex items-center justify-center mx-auto">
               <svg className="w-full h-full transform -rotate-90">
                 <circle
-                  cx="96"
-                  cy="96"
-                  r="88"
+                  cx="64"
+                  cy="64"
+                  r="56"
                   stroke="currentColor"
-                  strokeWidth="12"
+                  strokeWidth="10"
                   fill="none"
                   className="text-purple-100"
                 />
                 <circle
-                  cx="96"
-                  cy="96"
-                  r="88"
+                  cx="64"
+                  cy="64"
+                  r="56"
                   stroke="url(#gradient)"
-                  strokeWidth="12"
+                  strokeWidth="10"
                   fill="none"
-                  strokeDasharray={`${
-                    (data?.analysis?.complexity_score / 100) * 553
-                  } 553`}
+                  strokeDasharray={`${(data?.analysis?.complexity_score / 100) * 352} 352`}
                   className="transition-all duration-1000"
                   strokeLinecap="round"
                 />
                 <defs>
-                  <linearGradient
-                    id="gradient"
-                    x1="0%"
-                    y1="0%"
-                    x2="100%"
-                    y2="100%"
-                  >
+                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" stopColor="#a855f7" />
                     <stop offset="100%" stopColor="#ec4899" />
                   </linearGradient>
                 </defs>
               </svg>
+
+              {/* Score Text */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="text-center">
                   <div
-                    className={`text-6xl font-black bg-gradient-to-br ${getComplexityColor(
+                    className={`text-4xl font-black bg-gradient-to-br ${getComplexityColor(
                       data?.analysis?.complexity_score
                     )} bg-clip-text text-transparent`}
                   >
                     {data?.analysis?.complexity_score}
                   </div>
-                  <p className="text-sm font-bold text-gray-500">/ 100</p>
+                  <p className="text-xs font-bold text-gray-500">/ 100</p>
                 </div>
               </div>
             </div>
+
+            {/* Description */}
             <div className="text-center">
-              <p className="text-2xl font-black text-gray-800">
-                Complexity Score
-              </p>
               <p className="text-sm text-gray-500 mt-1">
                 {data?.analysis?.complexity_score <= 3
                   ? "Low complexity"
                   : data?.analysis?.complexity_score <= 6
-                  ? "Medium complexity"
-                  : "High complexity"}
+                    ? "Medium complexity"
+                    : "High complexity"}
               </p>
             </div>
           </CardContent>
@@ -576,24 +576,20 @@ const AnalysisDetails = ({ data, activeMetric }) => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-3 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200">
-                <p className="text-3xl font-black text-blue-600">
-                  {data?.dependencies?.total}
-                </p>
-                <p className="text-xs text-gray-600 mt-1">Total</p>
+            <div className="grid grid-cols-3 gap-4 w-full">
+              <div className="p-6 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border-2 border-blue-200 flex flex-col items-center justify-center">
+                <p className="text-4xl font-black text-blue-600">{data?.dependencies?.total}</p>
+                <p className="text-sm text-gray-600 mt-1">Total</p>
               </div>
-              <div className="text-center p-3 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200">
-                <p className="text-3xl font-black text-orange-600">
-                  {data?.dependencies?.outdated}
-                </p>
-                <p className="text-xs text-gray-600 mt-1">Outdated</p>
+
+              <div className="p-6 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 border-2 border-orange-200 flex flex-col items-center justify-center">
+                <p className="text-4xl font-black text-orange-600">{data?.dependencies?.outdated}</p>
+                <p className="text-sm text-gray-600 mt-1">Outdated</p>
               </div>
-              <div className="text-center p-3 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 border-2 border-red-200">
-                <p className="text-3xl font-black text-red-600">
-                  {data?.dependencies?.vulnerable}
-                </p>
-                <p className="text-xs text-gray-600 mt-1">Vulnerable</p>
+
+              <div className="p-6 rounded-xl bg-gradient-to-br from-red-50 to-rose-50 border-2 border-red-200 flex flex-col items-center justify-center">
+                <p className="text-4xl font-black text-red-600">{data?.dependencies?.vulnerable}</p>
+                <p className="text-sm text-gray-600 mt-1">Vulnerable</p>
               </div>
             </div>
           </CardContent>
@@ -669,11 +665,10 @@ const AnalysisDetails = ({ data, activeMetric }) => {
                           v{dep.version}
                         </Badge>
                         <Badge
-                          className={`${
-                            dep.status === "outdated"
-                              ? "bg-gradient-to-r from-orange-500 to-amber-500"
-                              : "bg-gradient-to-r from-emerald-500 to-teal-500"
-                          } text-white border-0 shadow-md`}
+                          className={`${dep.status === "outdated"
+                            ? "bg-gradient-to-r from-orange-500 to-amber-500"
+                            : "bg-gradient-to-r from-emerald-500 to-teal-500"
+                            } text-white border-0 shadow-md`}
                         >
                           {dep.status}
                         </Badge>

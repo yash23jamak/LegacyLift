@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ArrowRight,
   Upload,
@@ -13,9 +13,27 @@ import {
   Download,
   Package,
 } from "lucide-react";
+import Cookies from "js-cookie";
+import { useToast } from "@/hooks/use-toast";
 
 function Home() {
   const [activeStep, setActiveStep] = useState(0);
+  const isAuthenticated = Cookies.get("IsToken");
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    if (isAuthenticated) {
+      navigate("/upload");
+    } else {
+      toast({
+        title: "Signin Required",
+        description: "Please sign in to start migration.",
+        variant: "destructive",
+      });
+      navigate("/login");
+    }
+  };
 
   const migrationSteps = [
     {
@@ -143,11 +161,10 @@ function Home() {
                 <div
                   key={index}
                   onMouseEnter={() => setActiveStep(index)}
-                  className={`relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border-2 ${
-                    isActive
-                      ? "border-blue-400 shadow-blue-100"
-                      : "border-slate-200"
-                  } group`}
+                  className={`relative bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border-2 ${isActive
+                    ? "border-blue-400 shadow-blue-100"
+                    : "border-slate-200"
+                    } group`}
                 >
                   {/* Step Number Badge */}
                   <div
@@ -180,9 +197,8 @@ function Home() {
                   {index % 4 !== 3 && index < migrationSteps.length - 1 && (
                     <div className="hidden lg:block absolute top-1/2 -right-4 transform -translate-y-1/2 z-20">
                       <ArrowRight
-                        className={`w-6 h-6 text-blue-400 ${
-                          isActive ? "animate-pulse" : ""
-                        }`}
+                        className={`w-6 h-6 text-blue-400 ${isActive ? "animate-pulse" : ""
+                          }`}
                       />
                     </div>
                   )}
@@ -191,9 +207,8 @@ function Home() {
                   {index % 2 !== 1 && index < migrationSteps.length - 1 && (
                     <div className="hidden md:block lg:hidden absolute top-1/2 -right-4 transform -translate-y-1/2 z-20">
                       <ArrowRight
-                        className={`w-6 h-6 text-blue-400 ${
-                          isActive ? "animate-pulse" : ""
-                        }`}
+                        className={`w-6 h-6 text-blue-400 ${isActive ? "animate-pulse" : ""
+                          }`}
                       />
                     </div>
                   )}
@@ -202,9 +217,8 @@ function Home() {
                   {index < migrationSteps.length - 1 && (
                     <div className="md:hidden absolute -bottom-4 left-1/2 transform -translate-x-1/2 z-20">
                       <ArrowRight
-                        className={`w-6 h-6 text-blue-400 rotate-90 ${
-                          isActive ? "animate-pulse" : ""
-                        }`}
+                        className={`w-6 h-6 text-blue-400 rotate-90 ${isActive ? "animate-pulse" : ""
+                          }`}
                       />
                     </div>
                   )}
@@ -290,17 +304,15 @@ function Home() {
               React. Get started with a free analysis of your JSP project today.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
-              <Link to="/upload">
-                <button className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2">
-                  <span>Start Free Migration</span>
-                  <ArrowRight className="w-5 h-5" />
-                </button>
-              </Link>
+              <button onClick={handleClick} className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2" >
+                <span>Start Free Migration</span>
+                <ArrowRight className="w-5 h-5" />
+              </button>
             </div>
           </div>
         </div>
-      </section>
-    </div>
+      </section >
+    </div >
   );
 }
 

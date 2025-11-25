@@ -101,12 +101,12 @@ const UploadProject = () => {
     } finally {
       setLoading(false);
     }
-    
-    useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
-    
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div className="min-h-screen container mx-auto pb-12">
       {/* Main Content */}
