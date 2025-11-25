@@ -10,13 +10,13 @@ import {
 } from "lucide-react";
 import { Card } from "./ui/card";
 import { useEffect, useState } from "react";
-import { AnalysisPageProps } from "../pages/analysisUI";
+import { AnalysisData } from "../lib/analysis";
 
 const ProgressBar = ({
   isReportData,
 }: {
   isReportData?: boolean;
-  analysisAPIData: AnalysisPageProps;
+  analysisAPIData?: string | AnalysisData | null;
 }) => {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("");

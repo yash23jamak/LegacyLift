@@ -24,7 +24,7 @@ const Logout = () => {
                 title: data.message,
                 description: data.message || "You have been logged out.",
             });
-
+            localStorage.removeItem("userName");
             navigate("/");
         } catch (error) {
             toast({

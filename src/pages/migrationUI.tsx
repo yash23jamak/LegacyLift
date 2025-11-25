@@ -13,19 +13,11 @@ import {
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";
-import { Progress } from "@/components/ui/progress";
 import MigrationAnalysis from "@/components/MigrationAnalysis";
 import { useNavigate } from "react-router-dom";
+import { FeatureMapping } from "@/lib/analysis";
 
-interface FeatureMapping {
-  id: string;
-  legacyFeature: string;
-  reactEquivalent: string;
-  description: string;
-  category: "rendering" | "state" | "routing" | "data" | "ui";
-  complexity: "low" | "medium" | "high";
-  benefits: string[];
-}
+
 
 function MigrationUI() {
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -33,7 +25,7 @@ function MigrationUI() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
    const navigate = useNavigate();
-  const { projectJson, migrationReportJson,setProjectJson } = useAppContext();
+  const { projectJson, migrationReportJson,analysisReportJson } = useAppContext();
 
   const featureMappings: FeatureMapping[] = [
     {
@@ -198,13 +190,13 @@ function MigrationUI() {
       setLoading(true);
       const zip = new JSZip();
       // Add each file to the ZIP
-      projectJson?.forEach((file: { name: string; content: string }) => {
+      projectJson?.files?.forEach((file: { name: string; content: string }) => {
         zip.file(file?.name, file?.content);
       });
 
       // Generate ZIP and trigger download
       const blob = await zip.generateAsync({ type: "blob" });
-      saveAs(blob, "Migration_Project.zip");
+      saveAs(blob,`${analysisReportJson?.[0]?.project?.name}-Reactjs.zip`||"react-migration-project.zip");
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -238,10 +230,10 @@ function MigrationUI() {
             A comprehensive guide mapping legacy JavaServer Pages features to
             their modern React equivalents
           </p>
-          <h2 className="text-2xl font-bold text-slate-900 mb-4">
-            Loading Project Data
-          </h2>
-          <Progress value={progress} className="mb-4" />
+          <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h2 className="text-2xl font-semibold text-foreground">
+                    Migrating your project...
+                  </h2>
           <p className="text-slate-600">
             Please wait while we prepare your migration data...
           </p>
@@ -251,7 +243,6 @@ function MigrationUI() {
   }
 
   if(projectJson?.files[0]?.error){
-    // setProjectJson(null);
     navigate("/analysis")
     return 
   }

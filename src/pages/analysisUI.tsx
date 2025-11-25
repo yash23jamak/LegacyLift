@@ -7,9 +7,7 @@ import { useAppContext } from "@/contexts/useContext";
 import AnalysisDetails from "@/components/AnalysisDetails";
 import { useApi } from "@/hooks/useAPI";
 import { useToast } from "@/hooks/use-toast";
-export interface AnalysisPageProps {
-  analysisAPIData: string | AnalysisData;
-}
+
 
 const AnalysisPage = () => {
   const [data, setData] = useState<AnalysisData | null>(null);
@@ -59,7 +57,7 @@ const AnalysisPage = () => {
       setMigrationReportJson(migrationReport?.data?.report[0]);
       setProjectJson(response?.data);
     } catch (err) {
-      console.log("error: ", error);
+      console.log("error: ", err);
     }
   };
 
@@ -94,7 +92,7 @@ const AnalysisPage = () => {
   }, []);
 
 useEffect(() => {
-setData(analysisReportJson[0] || {})
+setData(analysisReportJson?.[0] || null)
 }, [])
 
 

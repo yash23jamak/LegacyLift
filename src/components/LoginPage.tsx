@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { unknown, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -49,13 +49,14 @@ const LoginPage = () => {
             toast({
                 title: result.message || "Login successful",
             });
-
+            localStorage.setItem("userName", result?.username);
             navigate("/home");
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+            setError(errorMessage);
             toast({
                 title: "Login failed",
-                description: err.message,
+                description: errorMessage,
                 variant: "destructive",
             });
         } finally {

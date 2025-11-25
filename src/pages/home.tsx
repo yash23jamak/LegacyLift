@@ -214,7 +214,7 @@ function Home() {
           </div>
 
           {/* Flowchart Image */}
-          <div className="mt-16 bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
+          <div id="flowchart" className="mt-16 bg-white rounded-2xl shadow-2xl p-8 border border-slate-200">
             <div className="text-center mb-6">
               <h3 className="text-2xl font-bold text-slate-900 mb-2">
                 Migration Flow Diagram
@@ -233,7 +233,9 @@ function Home() {
           </div>
 
           {/* Tech Stack Overview */}
-          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
+          <div id="tech">
+          </div>
+          <div  className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
             <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">
               Modern Tech Stack Used
             </h3>

@@ -53,10 +53,11 @@ const SignupPage = () => {
             // Redirect to login page after successful signup
             navigate("/");
 
-        } catch (err: any) {
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
             toast({
                 title: "Signup failed",
-                description: err.message,
+                description: errorMessage,
                 variant: "destructive",
             });
         } finally {
