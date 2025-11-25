@@ -20,7 +20,7 @@ import { useApi } from "@/hooks/useAPI";
 import JSZip from "jszip";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/useContext";
-
+import { useStep } from "../contexts/useStepContext";
 interface FileUploadZoneProps {
   onFilesUpload: (files: File[]) => void;
   onGithubAnalyze: (repoUrl: string) => void;
@@ -50,6 +50,8 @@ export const FileUploadZone = ({
   const { setAnalysisReportJson } = useAppContext();
   // Dummy JSON with file names
   const [files, setFiles] = useState(filesList || []);
+  // Step Context
+  const { setStep } = useStep();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -157,7 +159,11 @@ export const FileUploadZone = ({
     });
 
     if (response?.data?.status == 200 && !response?.data?.report[0]?.error) {
-      setAnalysisReportJson(response?.data?.report);
+      setAnalysisReportJson(response?.data?.report)
+
+      // Update step before navigation
+      setStep(2);
+
       navigate("/analysis", {
         state: { analysisAPIData: response?.data?.report },
       });

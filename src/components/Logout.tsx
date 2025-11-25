@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { LogOut } from "lucide-react";
+import Cookies from "js-cookie";
 
 const Logout = () => {
     const navigate = useNavigate();
@@ -20,12 +21,15 @@ const Logout = () => {
                 throw new Error(data.message || "Logout failed.");
             }
 
+            if (response.ok) {
+                Cookies.remove("IsToken");
+            }
             toast({
                 title: data.message,
                 description: data.message || "You have been logged out.",
             });
             localStorage.removeItem("userName");
-            navigate("/");
+            navigate("/login");
         } catch (error) {
             toast({
                 title: "Logout Failed",

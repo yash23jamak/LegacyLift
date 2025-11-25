@@ -9,14 +9,16 @@ import {
   CheckCircle2,
   Gauge,
   Users,
+  ScanSearch,
 } from "lucide-react";
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 import { useAppContext } from "@/contexts/useContext";
 import MigrationAnalysis from "@/components/MigrationAnalysis";
 import { useNavigate } from "react-router-dom";
+import { FileExplorer } from "@/components/FileExplorer";
+import { ProjectFile } from '@/type/fileExplorerType';
 import { FeatureMapping } from "@/lib/analysis";
-
 
 
 function MigrationUI() {
@@ -24,8 +26,12 @@ function MigrationUI() {
   const [sortBy, setSortBy] = useState<"name" | "complexity">("name");
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState(0);
-   const navigate = useNavigate();
-  const { projectJson, migrationReportJson,analysisReportJson } = useAppContext();
+  const navigate = useNavigate();
+  const { projectJson, migrationReportJson, analysisReportJson } = useAppContext();
+
+  const files: ProjectFile[] = Array.isArray(projectJson)
+    ? projectJson
+    : projectJson?.files ?? [];
 
   const featureMappings: FeatureMapping[] = [
     {
@@ -244,11 +250,11 @@ function MigrationUI() {
 
   if(projectJson?.files[0]?.error){
     navigate("/analysis")
-    return 
+    return
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 mx-auto px-4 sm:px-6 lg:px-8 ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <MigrationAnalysis ProjectJson={projectJson || []} />
         <section className="mb-16">
@@ -372,6 +378,16 @@ function MigrationUI() {
               }
             )}
           </div>
+
+          {/* Code Preview Block  */}
+          <div className="flex items-center gap-3 mb-6 mt-12">
+            <ScanSearch className="w-7 h-7 text-blue-600" />
+            <h2 className="text-3xl font-bold text-slate-900">Code Preview</h2>
+          </div>
+          <div className="h-[90vh] w-full p-4 mb-12">
+            <FileExplorer files={files} />
+          </div>
+
           <div className="mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 text-white shadow-lg">
             <div className="flex justify-between items-center gap-4">
               <h3 className="text-2xl font-bold mb-2">
@@ -380,9 +396,8 @@ function MigrationUI() {
               <button
                 onClick={() => GenerateZIP()}
                 disabled={loading}
-                className={`w-full sm:w-auto ${
-                  loading ? "bg-blue-400 cursor-not-allowed" : "bg-transparent"
-                } text-white px-8 py-4 rounded-xl border-2 border-white hover:bg-white hover:text-blue-600 transition-all font-semibold text-lg`}
+                className={`w-full sm:w-auto ${loading ? "bg-blue-400 cursor-not-allowed" : "bg-transparent"
+                  } text-white px-8 py-4 rounded-xl border-2 border-white hover:bg-white hover:text-blue-600 transition-all font-semibold text-lg`}
               >
                 {loading ? "Generating ZIP..." : "Download ZIP"}
               </button>

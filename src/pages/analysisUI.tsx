@@ -7,6 +7,7 @@ import { useAppContext } from "@/contexts/useContext";
 import AnalysisDetails from "@/components/AnalysisDetails";
 import { useApi } from "@/hooks/useAPI";
 import { useToast } from "@/hooks/use-toast";
+import { useStep } from "../contexts/useStepContext";
 
 
 const AnalysisPage = () => {
@@ -16,16 +17,22 @@ const AnalysisPage = () => {
   const { apiCall, error } = useApi();
   const { toast } = useToast();
 
+  // Step Context
+  const { setStep } = useStep();
+
   const { setProjectJson, setMigrationReportJson } = useAppContext();
 
   const location = useLocation();
-     const navigate = useNavigate();
+  const navigate = useNavigate();
   const { analysisReportJson } = useAppContext();
   const { analysisAPIData } = location.state || analysisReportJson || {};
 
   // API Integration For Migration Process
   const MigrationAPI = async () => {
     try {
+      //Update step to 3
+      setStep(3);
+      navigate("/migration");
       // Call for Migration Report
       const migrationReport = await apiCall({
         method: "post",
@@ -44,20 +51,30 @@ const AnalysisPage = () => {
           "Content-Type": "application/json",
         },
       });
-      if (response?.status == 500 || response?.status == 502) {
+
+      // Handle server errors
+      if (response?.status === 500 || response?.status === 502) {
         toast({
           variant: "destructive",
           title: "Migration Failed Please Try Again",
-          description:
-            "There was an error during the migration process. Please try again later.",
+          description: "There was an error during the migration process. Please try again later.",
         });
         return navigate("/analysis");
       }
 
       setMigrationReportJson(migrationReport?.data?.report[0]);
       setProjectJson(response?.data);
+
+
+
+      
+
     } catch (err) {
-      console.log("error: ", err);
+      toast({
+        variant: "destructive",
+        title: "Unexpected Error",
+        description: "Something went wrong during migration.",
+      });
     }
   };
 
@@ -100,7 +117,7 @@ setData(analysisReportJson?.[0] || null)
     window.scrollTo(0, 0);
   }, []);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-50 via-blue-50 to-purple-50 overflow-x-hidden mx-auto px-4 sm:px-6 lg:px-8">
       {/* Floating Orbs Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none"></div>
 
@@ -115,16 +132,13 @@ setData(analysisReportJson?.[0] || null)
           </h2>
         </div>
         <div>
-          <Link to="/migration">
-            <button
-              onClick={() => MigrationAPI()}
-              // disabled={loading}
-              className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2"
-            >
-              <span>Start Migration</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </Link>
+          <button
+            onClick={MigrationAPI}
+            className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2"
+          >
+            <span>Start Migration</span>
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
