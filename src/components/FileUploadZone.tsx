@@ -20,7 +20,7 @@ import { useApi } from "@/hooks/useAPI";
 import JSZip from "jszip";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/useContext";
-
+import { useStep } from "../contexts/useStepContext";
 interface FileUploadZoneProps {
   onFilesUpload: (files: File[]) => void;
   onGithubAnalyze: (repoUrl: string) => void;
@@ -49,6 +49,8 @@ export const FileUploadZone = ({
   const { setAnalysisReportJson } = useAppContext();
   // Dummy JSON with file names
   const [files, setFiles] = useState(filesList || []);
+  // Step Context
+  const { setStep } = useStep();
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -155,11 +157,15 @@ export const FileUploadZone = ({
 
     if (response?.data?.status == 200 && !response?.data?.report[0]?.error) {
       setAnalysisReportJson(response?.data?.report)
+
+      // Update step before navigation
+      setStep(2);
+
       navigate("/analysis", {
         state: { analysisAPIData: response?.data?.report },
       });
       toast({
-        title:  response?.data?.message ||"Analysis Complete!",
+        title: response?.data?.message || "Analysis Complete!",
         description: "Your Analysis Report is Ready.",
       });
     } else {
@@ -198,9 +204,9 @@ export const FileUploadZone = ({
     setFiles(filesList || []);
   }, [filesList]);
 
-   useEffect(() => {
-      window.scrollTo(0, 0);
-    }, []);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   return (
     <div>
@@ -243,11 +249,10 @@ export const FileUploadZone = ({
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     onDrop={handleDrop}
-                    className={`relative border-3 border-dashed rounded-2xl p-16 text-center transition-all ${
-                      isDragging
-                        ? "border-primary bg-primary/5"
-                        : "border-border bg-muted/30"
-                    }`}
+                    className={`relative border-3 border-dashed rounded-2xl p-16 text-center transition-all ${isDragging
+                      ? "border-primary bg-primary/5"
+                      : "border-border bg-muted/30"
+                      }`}
                   >
                     <input
                       type="file"

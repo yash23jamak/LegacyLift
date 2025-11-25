@@ -7,6 +7,7 @@ import { useAppContext } from "@/contexts/useContext";
 import AnalysisDetails from "@/components/AnalysisDetails";
 import { useApi } from "@/hooks/useAPI";
 import { useToast } from "@/hooks/use-toast";
+import { useStep } from "../contexts/useStepContext";
 export interface AnalysisPageProps {
   analysisAPIData: string | AnalysisData;
 }
@@ -18,10 +19,13 @@ const AnalysisPage = () => {
   const { apiCall, error } = useApi();
   const { toast } = useToast();
 
+  // Step Context
+  const { setStep } = useStep();
+
   const { setProjectJson, setMigrationReportJson } = useAppContext();
 
   const location = useLocation();
-     const navigate = useNavigate();
+  const navigate = useNavigate();
   const { analysisReportJson } = useAppContext();
   const { analysisAPIData } = location.state || analysisReportJson || {};
 
@@ -46,20 +50,31 @@ const AnalysisPage = () => {
           "Content-Type": "application/json",
         },
       });
-      if (response?.status == 500 || response?.status == 502) {
+
+      // Handle server errors
+      if (response?.status === 500 || response?.status === 502) {
         toast({
           variant: "destructive",
           title: "Migration Failed Please Try Again",
-          description:
-            "There was an error during the migration process. Please try again later.",
+          description: "There was an error during the migration process. Please try again later.",
         });
         return navigate("/analysis");
       }
 
       setMigrationReportJson(migrationReport?.data?.report[0]);
       setProjectJson(response?.data);
+
+      //Update step to 3
+      setStep(3);
+
+      navigate("/migration");
+
     } catch (err) {
-      console.log("error: ", error);
+      toast({
+        variant: "destructive",
+        title: "Unexpected Error",
+        description: "Something went wrong during migration.",
+      });
     }
   };
 
@@ -93,9 +108,9 @@ const AnalysisPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-useEffect(() => {
-setData(analysisReportJson[0] || {})
-}, [])
+  useEffect(() => {
+    setData(analysisReportJson[0] || {})
+  }, [])
 
 
   useEffect(() => {
@@ -117,16 +132,13 @@ setData(analysisReportJson[0] || {})
           </h2>
         </div>
         <div>
-          <Link to="/migration">
-            <button
-              onClick={() => MigrationAPI()}
-              // disabled={loading}
-              className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2"
-            >
-              <span>Start Migration</span>
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </Link>
+          <button
+            onClick={MigrationAPI}
+            className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2"
+          >
+            <span>Start Migration</span>
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
       </div>
 
