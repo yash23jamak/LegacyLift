@@ -10,19 +10,16 @@ import {
 } from "lucide-react";
 import { Card } from "./ui/card";
 import { useEffect, useState } from "react";
-import { AnalysisPageProps } from "./analysisUI";
-import { useNavigate } from "react-router-dom";
+import { AnalysisData } from "../lib/analysis";
 
 const ProgressBar = ({
   isReportData,
-  ananlysisAPIData,
 }: {
   isReportData?: boolean;
-  ananlysisAPIData: AnalysisPageProps;
+  analysisAPIData?: string | AnalysisData | null;
 }) => {
   const [analysisProgress, setAnalysisProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState("");
-  const navigate = useNavigate();
 
   // ***********************
   useEffect(() => {
@@ -59,8 +56,6 @@ const ProgressBar = ({
       setTimeout(() => {
         setAnalysisProgress(100);
         setCurrentStep("Complete");
-
-        navigate("/analysis", { state: { ananlysisAPIData } });
       }, 500); // Optional delay before showing "Complete"
     }
   }, [isReportData]); // Completes only when isReportData becomes true
@@ -102,7 +97,7 @@ const ProgressBar = ({
               </div>
             </div>
 
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-4 gap-4">
               {[
                 {
                   progress: 10,
@@ -149,21 +144,21 @@ const ProgressBar = ({
                 return (
                   <div
                     key={item.name}
-                    className={`flex flex-col items-center p-4 rounded-xl transition-all duration-300 ${
+                    className={`flex flex-col items-center p-2 rounded-xl transition-all duration-300 ${
                       isCurrent
                         ? "bg-white shadow-lg scale-105 ring-2 ring-blue-500"
                         : isComplete
-                        ? "bg-white/70 shadow"
-                        : "bg-white/40"
+                          ? "bg-white/70 shadow"
+                          : "bg-white/40"
                     }`}
                   >
                     <div
-                      className={`w-12 h-12 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 ${
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center mb-3 transition-all duration-300 ${
                         isComplete
                           ? "bg-gradient-to-br from-green-400 to-emerald-500 shadow-md"
                           : isCurrent
-                          ? "bg-gradient-to-br from-blue-400 to-purple-500 shadow-md animate-pulse"
-                          : "bg-gray-200"
+                            ? "bg-gradient-to-br from-blue-400 to-purple-500 shadow-md animate-pulse"
+                            : "bg-gray-200"
                       }`}
                     >
                       {isComplete ? (
@@ -181,8 +176,8 @@ const ProgressBar = ({
                         isCurrent
                           ? "text-gray-900"
                           : isComplete
-                          ? "text-gray-700"
-                          : "text-gray-500"
+                            ? "text-gray-700"
+                            : "text-gray-500"
                       }`}
                     >
                       {item.name}

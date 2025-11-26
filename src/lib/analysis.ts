@@ -121,3 +121,32 @@ export interface AnalysisData {
   ai_tools: AITools;
   progress: Progress;
 }
+
+export interface AnalysisReportProps {
+  report: string;
+  onDownload: () => void;
+}
+
+export interface ConvertedCodeProps {
+  code: string;
+  onDownload: () => void;
+}
+
+export interface FeatureMapping {
+  id: string;
+  legacyFeature: string;
+  reactEquivalent: string;
+  description: string;
+  category: "rendering" | "state" | "routing" | "data" | "ui";
+  complexity: "low" | "medium" | "high";
+  benefits: string[];
+}
+
+export interface Improvement {
+  title: string;
+  stat: string;
+  description: string;
+}
+export interface AnalysisPageProps {
+  analysisAPIData: string | AnalysisData[];
+}
