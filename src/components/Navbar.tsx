@@ -15,7 +15,7 @@ const Navbar = () => {
   const hideLogout =
     location.pathname === "/login" || location.pathname === "/signup";
 
-  let userName = localStorage.getItem("userName");
+  const userName = localStorage.getItem("userName");
 
   // header migration button logic for login/out
   const handleStartMigration = () => {

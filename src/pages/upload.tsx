@@ -108,7 +108,7 @@ const UploadProject = () => {
   }, []);
 
   return (
-    <div className="min-h-screen container mx-auto pb-12">
+    <div className="min-h-screen container mx-auto pb-16">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-6 space-y-8 mt-5">
         {/* File Upload */}

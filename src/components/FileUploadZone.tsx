@@ -251,16 +251,15 @@ export const FileUploadZone = ({
 
                   {/* Upload Tab Content */}
                   <TabsContent value="upload" className="p-0 m-0">
-                    <div className={`p-12 ${files && files.length > 0 ? "pb-0":""}`} >
+                    <div className={`p-12 ${files && files.length > 0 ? "pb-0" : ""}`} >
                       <div
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         onDrop={handleDrop}
-                        className={`relative border-3 border-dashed rounded-2xl p-16 ${files && files.length > 0 ? "pb-0":""} text-center transition-all ${
-                          isDragging
-                            ? "border-primary bg-primary/5"
-                            : "border-border bg-muted/30"
-                        }`}
+                        className={`relative border-3 border-dashed rounded-2xl p-16 ${files && files.length > 0 ? "pb-0" : ""} text-center transition-all ${isDragging
+                          ? "border-primary bg-primary/5"
+                          : "border-border bg-muted/30"
+                          }`}
                       >
                         <input
                           type="file"
@@ -288,10 +287,10 @@ export const FileUploadZone = ({
                           Choose Files
                         </Button>
 
-                        <div className="mt-4 pt-4 border-t border-border">
-                          <p className="text-sm font-semibold text-muted-foreground mb-0">
+                        <div className="mt-8 py-8 border-t border-border text-center">
+                          <span className="text-sm font-semibold text-muted-foreground">
                             Your ZIP must contain .jsp files.
-                          </p>
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -309,7 +308,7 @@ export const FileUploadZone = ({
                         </h3>
                         <p className="text-muted-foreground">
                           Enter a GitHub repository URL to analyze your legacy
-                          project
+                          project.
                         </p>
                       </div>
 

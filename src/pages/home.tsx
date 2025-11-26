@@ -35,12 +35,13 @@ function Home() {
     }
   };
 
+
   const migrationSteps = [
     {
       icon: Upload,
       title: "Step 1: Upload Your Project",
       description:
-        "Upload, Select, or Drag & Drop your JSP files, folders, or repository links",
+        "Upload, select, or drag & drop your JSP files, folders, or repository links",
       details:
         "Supports multiple file formats including ZIP, WAR, individual JSP files, and Git repository links. Simply drag and drop or select from your system.",
       color: "from-blue-600 to-cyan-600",
@@ -49,9 +50,9 @@ function Home() {
       icon: FileCheck,
       title: "Step 2: Validation & Management",
       description:
-        "Automatic validation of uploaded files with option to re-upload if needed",
+        "Automatic validation of uploaded files with the option to re-upload if needed",
       details:
-        "View list of uploaded documents, manage files, and remove unwanted items. Non-JSP projects are automatically detected and prompt for re-upload.",
+        "View the list of uploaded documents, manage files, and remove unwanted items. Non-JSP projects are automatically detected and flagged for re-upload.",
       color: "from-purple-600 to-pink-600",
     },
     {
@@ -65,7 +66,7 @@ function Home() {
     {
       icon: FileText,
       title: "Step 4: Analysis Report",
-      description: "Detailed report with manual verification from legacy code",
+      description: "Detailed report with manual verification of legacy code",
       details:
         "Comprehensive analysis report covering architecture patterns, potential issues, recommended migration strategy, and code quality metrics.",
       color: "from-green-600 to-teal-600",
@@ -74,25 +75,25 @@ function Home() {
       icon: RefreshCw,
       title: "Step 5: Migration to React",
       description:
-        "Automated transformation from JSP to modern React application",
+        "Automated transformation from JSP to a modern React application",
       details:
-        "Converts JSP pages to React components using modern tech stack: React, Vite, Tailwind CSS, React Router Dom, Redux/ReactQuery, Vitest, ESLint/Prettier, and Axios.",
+        "Converts JSP pages to React components using a modern tech stack: React, Vite, Tailwind CSS, React Router DOM, Redux/React Query, Vitest, ESLint/Prettier, and Axios.",
       color: "from-indigo-600 to-blue-600",
     },
     {
       icon: Wrench,
       title: "Step 6: Feature Mapping",
       description:
-        "Map all legacy features to React modern equivalent components",
+        "Map all legacy features to modern React equivalent components",
       details:
-        "Every JSP feature is carefully mapped to its React equivalent, ensuring no functionality is lost during migration. Complete component library created.",
+        "Every JSP feature is carefully mapped to its React equivalent, ensuring no functionality is lost during migration. A complete component library is created.",
       color: "from-yellow-600 to-orange-600",
     },
     {
       icon: Package,
       title: "Step 7: Application Generation",
       description:
-        "Generate complete React application with all configurations",
+        "Generate a complete React application with all configurations",
       details:
         "Fully structured React project with proper folder organization, routing setup, state management, API integration, and build configurations.",
       color: "from-cyan-600 to-blue-600",
@@ -100,15 +101,16 @@ function Home() {
     {
       icon: Download,
       title: "Step 8: Download Application",
-      description: "Download your production-ready React application as ZIP",
+      description: "Download your production-ready React application as a ZIP",
       details:
         "Complete project package with source code, dependencies, tests, documentation, and deployment instructions. Ready to run with npm install.",
       color: "from-pink-600 to-purple-600",
     },
   ];
 
+
   return (
-    <div className="min-h-screen  mx-auto px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+    <div className="min-h-screen  mx-auto px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-200 via-blue-50 to-slate-100">
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -124,9 +126,7 @@ function Home() {
               </span>
             </h1>
             <p className="text-xl text-slate-600 leading-relaxed max-w-3xl mx-auto">
-              Transform your legacy JSP applications into modern, performant
-              React applications with our AI-powered migration platform. Save
-              months of development time and reduce costs by up to 90%.
+              Convert your legacy JSP applications into modern, high-performance React applications with our AI-powered migration platform. Save months of development time and reduce costs by up to 90%.
             </p>
           </div>
         </div>
@@ -135,7 +135,7 @@ function Home() {
       {/* Migration Process with Flowchart */}
       <section
         id="process"
-        className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-white to-blue-50"
+        className="min-h-screen mx-auto px-4 sm:px-6 lg:px-8 py-20 bg-white"
       >
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
@@ -147,8 +147,7 @@ function Home() {
               End-to-End Migration Process
             </h2>
             <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-              Follow our comprehensive 8-step workflow from legacy JSP to modern
-              React application
+              Follow our comprehensive 8-step workflow to migrate from legacy JSP to a modern React application.
             </p>
           </div>
 
@@ -234,14 +233,14 @@ function Home() {
                 Migration Flow Diagram
               </h3>
               <p className="text-slate-600">
-                Visual representation of the complete migration workflow
+                A visual representation of the complete migration workflow.
               </p>
             </div>
-            <div className="bg-slate-50 rounded-xl p-6 flex items-center justify-center overflow-auto">
+            <div className="w-full flex items-center justify-center overflow-auto">
               <img
                 src="/Xccelerator.drawio.svg"
                 alt="JSP to React Migration Flowchart"
-                className="max-w-full h-auto rounded-lg shadow-md"
+                className="max-w-full h-auto rounded-lg"
               />
             </div>
           </div>
@@ -249,7 +248,7 @@ function Home() {
           {/* Tech Stack Overview */}
           <div id="tech">
           </div>
-          <div  className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
+          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
             <h3 className="text-2xl font-bold text-slate-900 mb-6 text-center">
               Modern Tech Stack Used
             </h3>
@@ -294,7 +293,7 @@ function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
           <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-12 sm:p-16 text-center shadow-2xl">
             <FileCode className="w-16 h-16 text-white mx-auto mb-6" />
@@ -302,8 +301,7 @@ function Home() {
               Ready to Modernize Your Application?
             </h2>
             <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto leading-relaxed">
-              Join hundreds of companies that have successfully migrated to
-              React. Get started with a free analysis of your JSP project today.
+              Join hundreds of companies that have successfully migrated to React. Start today with a free analysis of your JSP project.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <button onClick={handleClick} className="w-full sm:w-auto bg-white text-blue-600 px-8 py-4 rounded-xl hover:shadow-2xl hover:scale-105 transition-all font-semibold text-lg flex items-center justify-center space-x-2" >
