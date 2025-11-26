@@ -99,7 +99,6 @@ function handleHttpError(status: number, data: any): void {
 
   // In a real app, you might dispatch to a global error handler or toast system
   if (import.meta.env.DEV) {
-    console.error(`HTTP ${status}:`, message);
   }
 }
 

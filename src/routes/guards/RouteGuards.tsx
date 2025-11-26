@@ -7,7 +7,11 @@ interface ProtectedRouteProps {
   requiredStep: number;
 }
 
-const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
+interface PublicRouteProps {
+  children: JSX.Element;
+}
+
+export const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
   const { currentStep } = useStep();
   const isAuthenticated = Cookies.get("IsToken");
 
@@ -26,4 +30,7 @@ const ProtectedRoute = ({ children, requiredStep }: ProtectedRouteProps) => {
   return children;
 };
 
-export default ProtectedRoute;
+export const PublicRoute = ({ children }: PublicRouteProps) => {
+  const isAuthenticated = Cookies.get("IsToken");
+  return isAuthenticated ? <Navigate to="/" replace /> : children;
+};
