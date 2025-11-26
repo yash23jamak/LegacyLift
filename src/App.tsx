@@ -34,7 +34,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <BackButton />
           </div>
         )}
-        <main className="max-w-7xl  pb-12">{children}</main>
+        <main>{children}</main>
       </div>
       <Footer />
     </div>

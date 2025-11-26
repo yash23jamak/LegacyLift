@@ -148,10 +148,9 @@ function MigrationUI() {
   const filteredMappings =
     migrationReportJson?.[0] ??
     featureMappings
-      .filter(
-        (mapping) =>
-          selectedCategory === "all" || mapping.category === selectedCategory
-      )
+      .filter((mapping) => {
+        return selectedCategory === "all" ? true : mapping.category === selectedCategory;
+      })
       .sort((a, b) => {
         if (sortBy === "complexity") {
           const complexityOrder = { low: 1, medium: 2, high: 3 };
@@ -202,7 +201,10 @@ function MigrationUI() {
 
       // Generate ZIP and trigger download
       const blob = await zip.generateAsync({ type: "blob" });
-      saveAs(blob,`${analysisReportJson?.[0]?.project?.name}-Reactjs.zip`||"react-migration-project.zip");
+      saveAs(
+        blob,
+        `${analysisReportJson?.[0]?.project?.name ? analysisReportJson[0].project.name : "react-migration-project"}-Reactjs.zip`
+      );
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -234,12 +236,12 @@ function MigrationUI() {
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed mb-7">
             A comprehensive guide mapping legacy JavaServer Pages features to
-            their modern React equivalents
+            their modern React equivalents.
           </p>
           <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <h2 className="text-2xl font-semibold text-foreground">
-                    Migrating your project...
-                  </h2>
+            Migrating your project...
+          </h2>
           <p className="text-slate-600">
             Please wait while we prepare your migration data...
           </p>
@@ -248,15 +250,15 @@ function MigrationUI() {
     );
   }
 
-  if(projectJson?.files[0]?.error){
+  if (projectJson?.files[0]?.error) {
     navigate("/analysis")
     return
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 mx-auto px-4 sm:px-6 lg:px-8 ">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <MigrationAnalysis ProjectJson={projectJson || []} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <MigrationAnalysis ProjectJson={projectJson ?? []} />
         <section className="mb-16">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -391,7 +393,7 @@ function MigrationUI() {
           <div className="mt-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-8 text-white shadow-lg">
             <div className="flex justify-between items-center gap-4">
               <h3 className="text-2xl font-bold mb-2">
-                Migration Complete Download ZIP
+                Migration finished. Download now.
               </h3>
               <button
                 onClick={() => GenerateZIP()}
