@@ -171,7 +171,7 @@ const AnalysisDetails = ({ data, activeMetric }) => {
           </CardTitle>
           <CardDescription className="text-lg">
             Comprehensive breakdown of your legacy codebase structure and
-            quality metrics
+            quality metrics.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -644,7 +644,7 @@ const AnalysisDetails = ({ data, activeMetric }) => {
             Dependency Analysis
           </CardTitle>
           <CardDescription className="text-lg">
-            Detailed breakdown of project dependencies and their status
+            Detailed breakdown of project dependencies and their status.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -927,7 +927,7 @@ const AnalysisDetails = ({ data, activeMetric }) => {
             Analysis Engine
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Advanced AI tools used to analyze and evaluate your legacy codebase
+            Advanced AI tools used to analyze and evaluate your legacy codebase.
           </p>
         </div>
 

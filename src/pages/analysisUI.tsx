@@ -65,10 +65,6 @@ const AnalysisPage = () => {
       setMigrationReportJson(migrationReport?.data?.report[0]);
       setProjectJson(response?.data);
 
-
-
-      
-
     } catch (err) {
       toast({
         variant: "destructive",
@@ -125,7 +121,7 @@ setData(analysisReportJson?.[0] || null)
       <AnalysisDetails data={data} activeMetric={activeMetric} />
 
       {/* Migration Process */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 rounded-3xl p-12 sm:p-16 text-center flex justify-between shadow-2xl">
+      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 mb-16 rounded-3xl p-12 sm:p-16 text-center flex justify-between shadow-2xl">
         <div className="flex   items-center">
           <h2 className="text-4xl sm:text-4xl font-bold text-white ">
             START YOUR MIGRATION JOURNEY
