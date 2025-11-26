@@ -2,22 +2,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation, Outlet } from "react-router-dom";
-import UploadProject from "./pages/upload";
-import NotFound from "./pages/NotFound";
-import AnalysisPage from "./pages/analysisUI";
-import Home from "./pages/home";
+import { BrowserRouter, useLocation } from "react-router-dom";
 import BackButton from "./components/BackButton";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import MigrationUI from "./pages/migrationUI";
-import SignupPage from "./components/SignupPage";
-import LoginPage from "./components/LoginPage";
 import { AppProvider } from "./contexts/useContext";
-import { StepProvider } from "./contexts/useStepContext"; // ✅ Import StepProvider
-import ProtectedRoute from "./components/ProtectedRoute";
-import StepProtectedRoute from "./components/StepProtectedRoute";
-import PublicRoute from "./components/PublicRoute";
+import { StepProvider } from "./contexts/useStepContext";
+import AppRoutes from "./routes/AppRoutes";
 
 const queryClient = new QueryClient();
 
@@ -50,29 +41,7 @@ const App = () => (
           <Sonner />
           <BrowserRouter>
             <Layout>
-              <Routes>
-                <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-                <Route path="/signup" element={<PublicRoute><SignupPage /></PublicRoute>} />
-                <Route path="/" element={<Home />} />
-
-                {/* Protected Routes Group */}
-                <Route element={<ProtectedRoute><Outlet /></ProtectedRoute>}>
-                  <Route
-                    path="/upload"
-                    element={<StepProtectedRoute requiredStep={1}><UploadProject /></StepProtectedRoute>}
-                  />
-                  <Route
-                    path="/analysis"
-                    element={<StepProtectedRoute requiredStep={2}><AnalysisPage /></StepProtectedRoute>}
-                  />
-                  <Route
-                    path="/migration"
-                    element={<StepProtectedRoute requiredStep={3}><MigrationUI /></StepProtectedRoute>}
-                  />
-                </Route>
-
-                <Route path="*" element={<NotFound />} />
-              </Routes>
+              <AppRoutes />
             </Layout>
           </BrowserRouter>
         </TooltipProvider>
