@@ -5,7 +5,7 @@ import { unknown, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { loginSchema } from "@/lib/validation";
+import { loginSchema } from "@/utils/validation";
 import Cookies from "js-cookie";
 
 type LoginFormData = z.infer<typeof loginSchema>;

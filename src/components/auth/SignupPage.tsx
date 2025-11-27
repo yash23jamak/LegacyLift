@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema } from "@/lib/validation";
+import { signupSchema } from "@/utils/validation";
 
 type SignupFormData = z.infer<typeof signupSchema>;
 

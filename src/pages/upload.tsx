@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { CheckCircle, Brain, Zap, Target } from "lucide-react";
 import { FileUploadZone } from "@/components/FileUploadZone";
 import { useToast } from "@/hooks/use-toast";
-import { useApi } from "@/hooks/useAPI";
+import { useApi } from "@/services/useApi";
 
 const UploadProject = () => {
   const [filesContent, setFilesContent] = useState<

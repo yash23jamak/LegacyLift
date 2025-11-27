@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 
-import { AnalysisData } from "@/lib/analysis";
+import { AnalysisData } from "@/types/analysis";
 import { ArrowRight } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAppContext } from "@/contexts/useContext";
 import AnalysisDetails from "@/components/AnalysisDetails";
-import { useApi } from "@/hooks/useAPI";
+import { useApi } from "@/services/useApi";
 import { useToast } from "@/hooks/use-toast";
 import { useStep } from "../contexts/useStepContext";
 
