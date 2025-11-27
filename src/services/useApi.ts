@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { APIInterceptor } from '@/lib/axiosInterceptor';
+import { APIInterceptor } from './axiosInterceptor';
 
 // Define a simple stateful hook for API requests
 export function useApi<T = any, R = AxiosResponse<T>>() {

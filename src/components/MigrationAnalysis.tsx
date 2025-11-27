@@ -1,7 +1,7 @@
 import {Wrench, Zap } from 'lucide-react';
 import React from 'react'
-import { ProjectFile } from '@/type/fileExplorerType';
-import { modernCapabilities } from '@/lib/mockdata';
+import { ProjectFile } from '@/types/fileExplorerType';
+import { modernCapabilities } from '@/constants/mockdata';
 
 
 

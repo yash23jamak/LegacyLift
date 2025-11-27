@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 
 import NotFound from "../pages/NotFound";
-import SignupPage from "../components/SignupPage";
-import LoginPage from "../components/LoginPage";
+import SignupPage from "../components/auth/SignupPage";
+import LoginPage from "../components/auth/LoginPage";
 import RouteGuard from "./guards/RouteGuards";
 import Home from "@/pages/home";
 import UploadProject from "@/pages/upload";

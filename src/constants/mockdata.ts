@@ -1,4 +1,4 @@
-import { AnalysisData } from "./analysis";
+import { AnalysisData } from "../types/analysis";
 import { Box, Layers, RefreshCw, Zap } from 'lucide-react';
 
 

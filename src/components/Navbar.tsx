@@ -2,7 +2,7 @@
 import { ChevronRight, Sparkles } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Logout from "./Logout";
+import Logout from "./auth/Logout";
 import { Link } from "react-router-dom";
 import { Button } from "./ui/button";
 import { useToast } from "@/hooks/use-toast";
