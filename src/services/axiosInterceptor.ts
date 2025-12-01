@@ -4,11 +4,49 @@ import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
 } from "axios";
+import Cookies from "js-cookie";
 
 // Environment variables for Vite
 const API_BASE_URL =
-  import.meta.env.VITE_BACKEND_URL || "http://localhost:3007/api/v1";
+  import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api/v1";
 // const API_TIMEOUT = 10000;
+
+// ============================================
+// Refresh Token State Management
+// ============================================
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+}> = [];
+
+/**
+ * Process queued requests after refresh token attempt
+ * @param error - If provided, rejects all queued requests; otherwise resolves them
+ */
+const processQueue = (error: AxiosError | null): void => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve();
+    }
+  });
+  failedQueue = [];
+};
+
+/**
+ * Clear authentication state and redirect to login
+ */
+const handleAuthFailure = (): void => {
+  Cookies.remove("IsToken");
+  localStorage.removeItem("userName");
+  localStorage.removeItem("currentStep");
+
+  if (typeof window !== "undefined") {
+    window.location.href = "/login";
+  }
+};
 
 // Create axios instance with default configuration
 const APIInterceptor: AxiosInstance = axios.create({
@@ -34,34 +72,62 @@ APIInterceptor.interceptors.request.use(
   (error: AxiosError): Promise<AxiosError> => Promise.reject(error)
 );
 
-
-
-// Response Interceptor
+// Response Interceptor with Refresh Token Logic
 APIInterceptor.interceptors.response.use(
   (response: AxiosResponse): AxiosResponse => response,
-  async (error: AxiosError): Promise<AxiosError> => {
+  async (error: AxiosError): Promise<unknown> => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
     if (error.response) {
       const { status, data } = error.response;
 
-      // Handle 401 Unauthorized
+      // Handle 401 Unauthorized - Attempt Token Refresh
       if (status === 401 && !originalRequest._retry) {
+        // Skip refresh for auth endpoints to prevent infinite loops
+        const isAuthEndpoint = originalRequest.url?.includes("/auth/");
+        if (isAuthEndpoint) {
+          handleAuthFailure();
+          return Promise.reject(error);
+        }
+
+        // If already refreshing, queue this request
+        if (isRefreshing) {
+          return new Promise((resolve, reject) => {
+            failedQueue.push({ resolve, reject });
+          })
+            .then(() => APIInterceptor(originalRequest))
+            .catch((err) => Promise.reject(err));
+        }
+
         originalRequest._retry = true;
+        isRefreshing = true;
 
         try {
-          // Call backend logout endpoint to clear cookie
-          await axios.post(`${API_BASE_URL}/auth/logout`, {}, { withCredentials: true });
-        } catch (e) {
-          console.error("Failed to clear cookie:", e);
-        }
+          // Attempt to refresh the token
+          await axios.post(
+            `${API_BASE_URL}/auth/refresh`,
+            {},
+            { withCredentials: true }
+          );
 
-        // Redirect to login page
-        if (typeof window !== "undefined") {
-          window.location.href = "/";
+          // Refresh successful - process queued requests
+          processQueue(null);
+
+          // Retry the original request
+          return APIInterceptor(originalRequest);
+        } catch (refreshError) {
+          // Refresh failed - reject all queued requests
+          processQueue(refreshError as AxiosError);
+
+          // Clear auth state and redirect to login
+          handleAuthFailure();
+
+          return Promise.reject(refreshError);
+        } finally {
+          isRefreshing = false;
         }
-      } else {
-        // ✅ Call handleHttpError for other status codes
+      } else if (status !== 401) {
+        // Handle other HTTP errors
         handleHttpError(status, data);
       }
     } else if (error.request) {
@@ -95,10 +161,6 @@ function handleHttpError(status: number, data: any): void {
       if (data?.message) {
         message = data.message;
       }
-  }
-
-  // In a real app, you might dispatch to a global error handler or toast system
-  if (import.meta.env.DEV) {
   }
 }
 

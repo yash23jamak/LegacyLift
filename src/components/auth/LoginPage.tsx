@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { unknown, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { loginSchema } from "@/utils/validation";
+import CryptoJS from "crypto-js";
 import Cookies from "js-cookie";
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -18,6 +19,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const secretKey = import.meta.env.VITE_ENCRYPTION_KEY; // Store securely in .env
 
     const {
         register,
@@ -27,17 +29,27 @@ const LoginPage = () => {
         resolver: zodResolver(loginSchema),
     });
 
+
     const onSubmit = async (data: LoginFormData) => {
         setError(null);
         setLoading(true);
 
         try {
+            // Encrypt password before sending
+            const encryptedPassword = CryptoJS.AES.encrypt(data.password, secretKey).toString();
+            console.log(encryptedPassword, "encryptedPassword")
+
+            const payload = {
+                email: data.email,
+                password: encryptedPassword
+            };
+
             const response = await fetch(`${backendUrl}/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(data),
+                body: JSON.stringify(payload),
                 credentials: "include"
             });
 
@@ -46,13 +58,10 @@ const LoginPage = () => {
             if (!response.ok) {
                 throw new Error(result.message || "Login failed. Please try again.");
             }
-            if (response.ok) {
-                Cookies.set("IsToken", true, { expires: 1 });
-            }
 
-            toast({
-                title: result.message || "Login successful",
-            });
+            Cookies.set("IsToken", "true", { expires: 1 });
+
+            toast({ title: result.message || "Login successful" });
             localStorage.setItem("userName", result?.username);
             navigate("/");
         } catch (err: unknown) {
@@ -67,6 +76,7 @@ const LoginPage = () => {
             setLoading(false);
         }
     };
+
 
     useEffect(() => {
         window.scrollTo(0, 0);
