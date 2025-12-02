@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema } from "@/utils/validation";
+import { encryptPassword } from "@/utils/utils";
 
 type SignupFormData = z.infer<typeof signupSchema>;
 
@@ -16,6 +17,7 @@ const SignupPage = () => {
     const { toast } = useToast();
 
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
+    const secretKey = import.meta.env.VITE_ENCRYPTION_KEY;
 
     const {
         register,
@@ -28,6 +30,8 @@ const SignupPage = () => {
     const handleSignup = async (data: SignupFormData) => {
         setLoading(true);
         try {
+            // Encrypt password before sending
+            const encryptedPassword = await encryptPassword(data.password, secretKey);
             const response = await fetch(`${backendUrl}/auth/register`, {
                 method: "POST",
                 headers: {
@@ -36,7 +40,7 @@ const SignupPage = () => {
                 body: JSON.stringify({
                     username: data.name,
                     email: data.email,
-                    password: data.password,
+                    password: encryptedPassword,
                 }),
             });
 
@@ -51,7 +55,7 @@ const SignupPage = () => {
             });
 
             // Redirect to login page after successful signup
-            navigate("/");
+            navigate("/login");
 
         } catch (err: unknown) {
             const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
