@@ -6,8 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { loginSchema } from "@/utils/validation";
-import CryptoJS from "crypto-js";
 import Cookies from "js-cookie";
+import { encryptPassword } from "@/utils/utils";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -36,8 +36,7 @@ const LoginPage = () => {
 
         try {
             // Encrypt password before sending
-            const encryptedPassword = CryptoJS.AES.encrypt(data.password, secretKey).toString();
-            console.log(encryptedPassword, "encryptedPassword")
+            const encryptedPassword = await encryptPassword(data.password, import.meta.env.VITE_ENCRYPTION_KEY);
 
             const payload = {
                 email: data.email,
