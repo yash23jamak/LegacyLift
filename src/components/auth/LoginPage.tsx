@@ -19,7 +19,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const { toast } = useToast();
     const backendUrl = import.meta.env.VITE_BACKEND_URL;
-    const secretKey = import.meta.env.VITE_ENCRYPTION_KEY; // Store securely in .env
+    const secretKey = import.meta.env.VITE_ENCRYPTION_KEY;
 
     const {
         register,
@@ -36,7 +36,7 @@ const LoginPage = () => {
 
         try {
             // Encrypt password before sending
-            const encryptedPassword = await encryptPassword(data.password, import.meta.env.VITE_ENCRYPTION_KEY);
+            const encryptedPassword = await encryptPassword(data.password, secretKey);
 
             const payload = {
                 email: data.email,
